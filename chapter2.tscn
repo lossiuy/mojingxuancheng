@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://c84hosg7oyref"]
+
+[ext_resource type="Script" path="res://scripts/chapter2.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dqu8m8ycspqdm" path="res://images/bg4.jpg" id="2_4vap5"]
+
+[node name="Chapter2" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4vap5")
+stretch_mode = 6
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 90.0
+offset_bottom = 70.0
+text = "返回"

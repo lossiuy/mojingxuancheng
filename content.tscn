@@ -1,0 +1,93 @@
+[gd_scene load_steps=6 format=3 uid="uid://d4ae4w5gc3rla"]
+
+[ext_resource type="Texture2D" uid="uid://by4yxkc1g838b" path="res://images/bg2.jpg" id="1_background"]
+[ext_resource type="Script" path="res://scripts/content.gd" id="1_content"]
+[ext_resource type="Texture2D" uid="uid://em3rhvyk7rdw" path="res://images/frame1.PNG" id="3_frame1"]
+[ext_resource type="Texture2D" uid="uid://kqqi7a8ube6a" path="res://images/frame2.png" id="4_frame2"]
+[ext_resource type="Texture2D" uid="uid://cq5dp1ba47b4y" path="res://images/frame3.png" id="5_frame3"]
+
+[node name="Content" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_content")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_background")
+
+[node name="Chapter1" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -590.0
+offset_top = -196.0
+offset_right = -212.0
+offset_bottom = 143.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("3_frame1")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Chapter2" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -495.0
+offset_top = 34.0
+offset_right = -104.0
+offset_bottom = 422.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("4_frame2")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Chapter3" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 114.0
+offset_top = -70.0
+offset_right = 470.0
+offset_bottom = 299.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("5_frame3")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -100.0
+offset_right = 50.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 24
+text = "返回"
+flat = true

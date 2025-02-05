@@ -1,0 +1,293 @@
+[gd_scene load_steps=16 format=3 uid="uid://08j3v65q6v7b"]
+
+[ext_resource type="Texture2D" uid="uid://sb8fff56tpjs" path="res://images/bg1.png" id="1_background"]
+[ext_resource type="Texture2D" uid="uid://dmvqx2boa0b1w" path="res://images/bg1-circle.PNG" id="2_circle"]
+[ext_resource type="Texture2D" uid="uid://dhf0c23f4nt4f" path="res://images/bg1-name.PNG" id="3_name"]
+[ext_resource type="Script" path="res://scripts/begin.gd" id="4_begin"]
+[ext_resource type="AudioStream" uid="uid://bsysw7fym06c5" path="res://music/bgm1.mp3" id="5_bgm1"]
+[ext_resource type="Texture2D" uid="uid://dj1ofw31e0w86" path="res://images/set.png" id="6_set"]
+[ext_resource type="Texture2D" uid="uid://sm7fx34gr2dm" path="res://images/set-bg.png" id="7_setbg"]
+[ext_resource type="Texture2D" uid="uid://b7on6xb5u2tj7" path="res://images/close.png" id="8_close"]
+[ext_resource type="Texture2D" uid="uid://j3bd8udq4ovp" path="res://images/music-logo.png" id="9_musiclogo"]
+
+[sub_resource type="Animation" id="Animation_fade_in"]
+resource_name = "fade_in"
+length = 4.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CircleContainer/Circle:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CircleContainer/GameName:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(2, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("ClickPrompt:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(3, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_fade_out"]
+resource_name = "fade_out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1"]
+_data = {
+"fade_in": SubResource("Animation_fade_in"),
+"fade_out": SubResource("Animation_fade_out")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider"]
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.3, 0.1, 0.1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_grabber_area"]
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.9, 0.2, 0.2, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_grabber_area_highlight"]
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.9, 0.2, 0.2, 1)
+
+[node name="BeginScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_begin")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_background")
+stretch_mode = 6
+
+[node name="CircleContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Circle" type="TextureRect" parent="CircleContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -324.0
+offset_right = 576.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_circle")
+stretch_mode = 6
+
+[node name="GameName" type="TextureRect" parent="CircleContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+offset_left = -568.0
+offset_top = -318.0
+offset_right = 575.0
+offset_bottom = 319.0
+texture = ExtResource("3_name")
+stretch_mode = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_1")
+}
+autoplay = "fade_in"
+
+[node name="ClickArea" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = -2.0
+offset_right = 6.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+flat = true
+
+[node name="ClickPrompt" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "点击任意位置开始游戏"
+horizontal_alignment = 1
+
+[node name="BGMPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_bgm1")
+volume_db = -10.0
+autoplay = true
+
+[node name="SetButton" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -96.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 93.0
+grow_horizontal = 0
+texture_normal = ExtResource("6_set")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="SettingsPanel" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -300.0
+offset_right = 580.0
+offset_bottom = 319.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_setbg")
+
+[node name="CloseButton" type="TextureButton" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -968.0
+offset_top = 63.0
+offset_right = 17.0
+offset_bottom = 603.0
+grow_horizontal = 0
+texture_normal = ExtResource("8_close")
+
+[node name="VolumeControl" type="HBoxContainer" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -483.0
+offset_top = -65.0
+offset_right = 417.0
+offset_bottom = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MusicLogo" type="TextureRect" parent="SettingsPanel/VolumeControl"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+texture = ExtResource("9_musiclogo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VolumeSlider" type="HSlider" parent="SettingsPanel/VolumeControl"]
+custom_minimum_size = Vector2(800, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+theme_override_styles/slider = SubResource("StyleBoxFlat_slider")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_grabber_area")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_grabber_area_highlight")
+
+[node name="SettingsWindow" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CloseButton" type="Button" parent="SettingsWindow"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 40.0
+grow_horizontal = 0
+text = "×"
