@@ -12,11 +12,11 @@ var left_arm = 1  # 左力臂比例
 var right_arm = 1  # 右力臂比例
 var dialogue_index = 0
 var dialogues = [
-	"阿明来到衡机阁中, 突然看到一群被拴在杠杆右侧的难民, 杠杆摇摇晃晃发出咯吱咯吱的声音, 下面是密密麻麻的毒虫...",
+	"阿明来到衡机阁中, 突然看到一群被拴在杠杆右侧的百姓, 杠杆摇摇晃晃发出咯吱咯吱的声音, 下面是密密麻麻的毒虫...",
 	"难民们惊恐地看着下方, 瑟瑟发抖. 突然, 一个黑衣人从阴影中现身.",
 	"\"又是一只蝼蚁来逞英雄? 看看这些可怜虫, 哈哈哈哈哈...\"\n\"劝你还是省点力气, 你救不了他们的.\"",
 	"\"我不会让你得逞的!\" 阿明坚定地说.",
-	"\"那要看你有没有这个本事了.\" 黑衣人冷笑一声, 消失在黑暗中.",
+	"\"三分钟后天平就会开始倾斜，他们也会开始下沉.你想救他们，那就看你有没有这个本事了！\" 黑衣人冷笑一声, 消失在黑暗中.",
 	"(阿明环顾四周, 发现有很多石头. 他回忆起《墨经》中的智慧:)\n\"衡, 加重于其一旁, 必捶. 权重相若也相衡, 则本短标长.\"",
 	"如果根据支点的位置和难民重量放置对应的石头重量, 或许可以使杠杆平衡, 解救难民...\n\n准备好了吗? 让我们开始拯救!"
 ]
@@ -34,13 +34,16 @@ var is_showing_ending = false
 var ending_dialogue_index = 0
 
 func _ready():
+	# 初始时背景正常显示
+	$Background.visible = true
+	$Background.modulate = Color(1, 1, 1, 1)  # 正常亮度
 	$BackButton.pressed.connect(_on_back_pressed)
 	$"UI#ConfirmButton".pressed.connect(_on_confirm_pressed)
 	$"UI#CancelButton".pressed.connect(_on_cancel_pressed)
 	$"UI#NextButton".pressed.connect(_on_next_pressed)
 	
 	# 隐藏游戏UI
-	$GameElements.hide()
+	$GameBackground/GameElements.hide()
 	$"UI#ConfirmButton".hide()
 	$"UI#CancelButton".hide()
 	$"UI_WeightInfo#CurrentWeight".hide()
@@ -60,6 +63,7 @@ func _ready():
 	$DialogueUI/NarrationText.gui_input.connect(_on_dialogue_input)
 	$DialogueUI/DialogueBox/StartButton.pressed.connect(_on_start_game)  # 更新按钮路径
 	$DialogueUI/DialogueBox/StartButton.hide()
+	$GameBackground.visible = false  # 初始时隐藏游戏背景
 
 func update_dialogue_display(index):
 	var dialogue_text = dialogues[index]
@@ -124,41 +128,44 @@ func update_portrait_modulate(index):
 	var blackman_portrait = $DialogueUI/DialogueBox/BlackmanPortrait
 	
 	if is_showing_ending:
-		# 结局对话的亮暗逻辑
+		# 结局对话的显示逻辑
+		ming_portrait.show()  # 主角头像始终显示
 		match ending_dialogue_index:
 			0, 4: # 纯旁白
+				blackman_portrait.hide()
 				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-				blackman_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
 			1, 2: # 黑衣人说话
+				blackman_portrait.show()
 				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
 				blackman_portrait.modulate = Color(1, 1, 1, 1)
 			3: # 阿明思考
+				blackman_portrait.hide()
 				ming_portrait.modulate = Color(1, 1, 1, 1)
-				blackman_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
 			5: # 阿明说话
+				blackman_portrait.hide()
 				ming_portrait.modulate = Color(1, 1, 1, 1)
-				blackman_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
 	else:
-		# 开场对话的亮暗逻辑
+		# 开场对话的显示逻辑
+		ming_portrait.show()  # 主角头像始终显示
 		match index:
 			0, 1: # 旁白
+				blackman_portrait.hide()
 				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-				blackman_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-			2: # 黑衣人说话
+			2: # 黑衣人出现并说话
+				blackman_portrait.show()
 				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
 				blackman_portrait.modulate = Color(1, 1, 1, 1)
 			3: # 阿明说话
+				blackman_portrait.show()  # 黑衣人还在场
 				ming_portrait.modulate = Color(1, 1, 1, 1)
 				blackman_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-			4: # 黑衣人说话
+			4: # 黑衣人最后说话
+				blackman_portrait.show()
 				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
 				blackman_portrait.modulate = Color(1, 1, 1, 1)
-			5: # 阿明思考
+			5, 6: # 黑衣人消失，阿明思考和旁白
+				blackman_portrait.hide()
 				ming_portrait.modulate = Color(1, 1, 1, 1)
-				blackman_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-			6: # 旁白
-				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-				blackman_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
 
 func _on_back_pressed():
 	get_tree().change_scene_to_file("res://content.tscn")
@@ -182,13 +189,13 @@ func _on_cancel_pressed():
 	update_weight_display()
 	
 	# 删除所有已放置的石头和人物
-	for child in $GameElements/Lever.get_children():
-		if child is Sprite2D and child != $GameElements/Lever/LeverBar:
+	for child in $GameBackground/GameElements/Lever.get_children():
+		if child is Sprite2D and child != $GameBackground/GameElements/Lever/LeverBar:
 			child.queue_free()
 	current_stone_count = 0
 	
 	# 重置杠杆旋转
-	var lever = $GameElements/Lever
+	var lever = $GameBackground/GameElements/Lever
 	if lever:
 		var tween = create_tween()
 		tween.tween_property(lever, "rotation", 0.0, 1.0)
@@ -243,7 +250,7 @@ func _on_next_pressed():
 			ending_dialogue_index = 0
 			
 			# 隐藏游戏UI
-			$GameElements.hide()
+			$GameBackground/GameElements.hide()
 			$"UI#StoneButtons".hide()
 			$"UI#ConfirmButton".hide()
 			$"UI#CancelButton".hide()
@@ -281,11 +288,20 @@ func _on_next_pressed():
 	setup_stones()
 
 func _on_start_game():
-	# 隐藏对话UI
-	$DialogueUI.hide()
+	# 将场景背景调暗
+	var tween = create_tween()
+	tween.tween_property($Background, "modulate", Color(0.3, 0.3, 0.3, 1), 0.5)
+	
+	# 显示游戏背景和元素
+	$GameBackground.visible = true
+	$GameBackground.modulate = Color(0, 0, 0, 0)  # 初始透明
+	tween.parallel().tween_property($GameBackground, "modulate", Color(1, 1, 1, 1), 0.5)  # 淡入显示
+	
+	# 隐藏对话界面
+	$DialogueUI.visible = false
 	
 	# 显示游戏UI
-	$GameElements.show()
+	$GameBackground/GameElements.show()
 	$"UI#StoneButtons".show()
 	$"UI#ConfirmButton".show()
 	$"UI#CancelButton".show()
@@ -317,7 +333,7 @@ func setup_stones():
 		$"UI#StoneButtons".add_child(button)
 
 func setup_lever():
-	var lever = $GameElements/Lever
+	var lever = $GameBackground/GameElements/Lever
 	if lever:
 		lever.rotation = 0
 
@@ -326,21 +342,34 @@ func setup_person():
 
 func setup_people():
 	# 删除所有现有的人物
-	for child in $GameElements/Lever.get_children():
+	for child in $GameBackground/GameElements/Lever.get_children():
 		if child.name.begins_with("@Sprite2D"):
 			child.queue_free()
 			
-	# 生成新的人物
+	# 生成新的人物，使用不同的人物图片
+	var people_textures = [
+		"res://images/savegame-people1.png",
+		"res://images/savegame-people2.png",
+		"res://images/savegame-people3.png",
+		"res://images/savegame-people4.png"
+	]
+	
+	var person_spacing = 40  # 保持当前间距
+	var base_x = 280  # 保持当前X坐标
+	var base_y = -85  # 再调高Y坐标
+	
 	for i in range(people_count):
 		var person = Sprite2D.new()
-		person.texture = load("res://images/savegame-people.png")
-		person.scale = Vector2(0.3, 0.3)
+		# 循环使用不同的人物图片
+		var texture_index = i % people_textures.size()
+		person.texture = load(people_textures[texture_index])
+		person.scale = Vector2(0.6, 0.6)  # 保持当前大小
 		
-		# 调整人物位置，确保在视野内
-		var offset = Vector2(60, -20 - (40 * i))  # 调整x坐标从80到60
+		# 从左到右排列人物
+		var offset = Vector2(base_x + (person_spacing * i), base_y)
 		person.position = offset
 		
-		$GameElements/Lever.add_child(person)
+		$GameBackground/GameElements/Lever.add_child(person)
 
 func add_weight(weight):
 	current_stone_weight += weight
@@ -361,18 +390,22 @@ func update_torque_ratio():
 func spawn_stone(weight):
 	var stone = Sprite2D.new()
 	
-	# 根据重量选择不同的石头图片
+	# 根据重量选择不同的石头图片和间距
 	var stone_texture = ""
+	var stone_spacing = 45  # 默认间距
 	match weight:
-		10:
-			stone_texture = "res://images/savegame-smallstone.png"  # 最小的石头
+		10:  # 小石头
+			stone_texture = "res://images/savegame-smallstone.png"
 			stone.scale = Vector2(0.3, 0.3)
-		20:
-			stone_texture = "res://images/savegame-mediumstone.png"  # 中等的石头
+			stone_spacing = 35  # 小石头用更小的间距
+		20:  # 中等石头
+			stone_texture = "res://images/savegame-mediumstone.png"
 			stone.scale = Vector2(0.4, 0.4)
-		50:
-			stone_texture = "res://images/savegame-bigstone.png"  # 最大的石头
+			stone_spacing = 40  # 中等石头用中等间距
+		50:  # 大石头
+			stone_texture = "res://images/savegame-bigstone.png"
 			stone.scale = Vector2(0.5, 0.5)
+			stone_spacing = 45  # 大石头保持原来的间距
 	
 	var texture_resource = load(stone_texture)
 	if texture_resource:
@@ -381,14 +414,15 @@ func spawn_stone(weight):
 		print("Failed to load texture: ", stone_texture)
 		return
 	
-	# 调整石头的初始位置，确保在视野内
-	var stone_spacing = 40
-	var base_x = -200  # 修改为更靠近中心的位置
-	var base_y = 55
+	# 从左往右排列石头
+	var base_x = -350  # 起始位置
+	var base_y = -50   # 高度位置
+	
+	# 计算当前石头的位置，使用对应的间距
 	var offset = Vector2(base_x + (stone_spacing * current_stone_count), base_y)
 	stone.position = offset
 	
-	$GameElements/Lever.add_child(stone)
+	$GameBackground/GameElements/Lever.add_child(stone)
 	current_stone_count += 1
 
 func show_success(moment):
@@ -398,7 +432,7 @@ func show_success(moment):
 		ending_dialogue_index = 0
 		
 		# 隐藏游戏UI
-		$GameElements.hide()
+		$GameBackground/GameElements.hide()
 		$"UI#StoneButtons".hide()
 		$"UI#ConfirmButton".hide()
 		$"UI#CancelButton".hide()
@@ -417,8 +451,8 @@ func show_success(moment):
 		# 连接结局对话的输入事件
 		if not $DialogueUI/DialogueBox.gui_input.is_connected(_on_ending_dialogue_input):
 			$DialogueUI/DialogueBox.gui_input.connect(_on_ending_dialogue_input)
-		if not $DialogueUI/NarrationText.gui_input.is_connected(_on_ending_dialogue_input):
-			$DialogueUI/NarrationText.gui_input.connect(_on_ending_dialogue_input)
+			if not $DialogueUI/NarrationText.gui_input.is_connected(_on_ending_dialogue_input):
+				$DialogueUI/NarrationText.gui_input.connect(_on_ending_dialogue_input)
 	else:
 		# 前两关显示成功提示和下一关按钮
 		var message = "左边力矩 = 右边力矩 = %d（%d力臂×%dkg）\n拯救成功！请进入下一关拯救其他难民！" % [
@@ -435,11 +469,22 @@ func show_success(moment):
 	# 旋转杠杆动画
 	can_rotate = true
 	var tween = create_tween()
-	tween.tween_property($GameElements/Lever, "rotation", 0.0, 1.0)
+	
+	# 设置旋转中心点为支点位置
+	var fulcrum = $GameBackground/GameElements/Fulcrum
+	var lever = $GameBackground/GameElements/Lever
+	var local_fulcrum_pos = lever.to_local(fulcrum.position)
+	lever.transform.origin = local_fulcrum_pos
+	
+	# 先重置杠杆位置
+	update_fulcrum_position()
+	
+	# 然后旋转
+	tween.tween_property(lever, "rotation", 0.0, 1.0)
 	
 	# 移动石头和人物
-	for child in $GameElements/Lever.get_children():
-		if child is Sprite2D and child != $GameElements/Lever/LeverBar:
+	for child in $GameBackground/GameElements/Lever.get_children():
+		if child is Sprite2D and child != $GameBackground/GameElements/Lever/LeverBar:
 			var original_pos = child.position
 			if "@Sprite2D" in child.name:  # 人物
 				tween.parallel().tween_property(child, "position:y", original_pos.y + 20, 1.0)
@@ -456,46 +501,59 @@ func show_failure():
 	can_rotate = true
 	var tween = create_tween()
 	var rotation_amount = 0.0
-	var slide_direction = 1.0  # 1.0表示向右滑，-1.0表示向左滑
+	var slide_direction = 1.0
+	
+	# 设置旋转中心点为支点位置
+	var fulcrum = $GameBackground/GameElements/Fulcrum
+	var lever = $GameBackground/GameElements/Lever
+	var local_fulcrum_pos = lever.to_local(fulcrum.position)
+	lever.transform.origin = local_fulcrum_pos
+	
+	# 先重置杠杆位置
+	update_fulcrum_position()
 	
 	if current_stone_weight * left_arm > people_count * people_weight * right_arm:
-		rotation_amount = -0.5  # 向左倾斜
+		rotation_amount = -0.5
 		slide_direction = -1.0
 	else:
-		rotation_amount = 0.5   # 向右倾斜
+		rotation_amount = 0.5
 		slide_direction = 1.0
 	
-	# 先旋转杠杆
-	tween.tween_property($GameElements/Lever, "rotation", rotation_amount, 0.5)
+	# 然后旋转
+	tween.tween_property(lever, "rotation", rotation_amount, 0.5)
 	
 	# 等待一小段时间后开始滑落
 	tween.tween_interval(0.2)
 	
 	# 调整滑落距离，确保在视野内
-	for child in $GameElements/Lever.get_children():
-		if child is Sprite2D and child != $GameElements/Lever/LeverBar:
+	for child in $GameBackground/GameElements/Lever.get_children():
+		if child is Sprite2D and child != $GameBackground/GameElements/Lever/LeverBar:
 			var original_pos = child.position
 			
 			if "@Sprite2D" in child.name:  # 人物
-				var target_x = -200 if slide_direction < 0 else original_pos.x  # 修改从-305到-200
+				var target_x = -200 if slide_direction < 0 else original_pos.x
 				
 				# 第一阶段：沿着杆子滑到目标端
 				tween.parallel().tween_property(child, "position:x", 
 					target_x, 1.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 				
-				# 第二阶段：从末端掉落
+				# 第二阶段：从末端掉落，先向上一点再下落
 				tween.parallel().tween_property(child, "position:y", 
-					500, 1.0).set_delay(1.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)  # 修改从800到500
+					original_pos.y - 10, 0.3).set_delay(1.0)  # 减小上移距离到10
+				tween.parallel().tween_property(child, "position:y", 
+					500, 0.7).set_delay(1.3)  # 然后下落
 			else:  # 石头
-				var target_x = original_pos.x if slide_direction < 0 else 60  # 修改从80到60
+				var target_x = original_pos.x if slide_direction < 0 else 60
 				
 				# 第一阶段：沿着杆子滑到目标端
 				tween.parallel().tween_property(child, "position:x", 
 					target_x, 1.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 				
-				# 第二阶段：从末端掉落
+				# 第二阶段：从末端掉落，先向上一点再下落
 				tween.parallel().tween_property(child, "position:y", 
-					500, 1.0).set_delay(1.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)  # 修改从800到500
+					original_pos.y - 10, 0.3).set_delay(1.0)  # 减小上移距离到10
+				tween.parallel().tween_property(child, "position:y", 
+					500, 0.7).set_delay(1.3)  # 然后下落
 	
 	# 等待动画结束后重置
 	tween.tween_callback(func():
@@ -506,28 +564,22 @@ func update_level_display():
 	$"UI#LevelLabel".text = "第%d关" % current_level
 
 func update_fulcrum_position():
-	var fulcrum = $GameElements/Fulcrum
-	var lever = $GameElements/Lever
+	var fulcrum = $GameBackground/GameElements/Fulcrum
+	var lever = $GameBackground/GameElements/Lever
 	var total_ratio = left_arm + right_arm
-	var lever_length = 300  # 杠杆总长度
+	var lever_length = 300
 	
-	# 计算支点位置
-	# 如果左：右=1：2，支点在1/3处
-	# 如果左：右=3：1，支点在3/4处
-	var relative_position = float(left_arm) / total_ratio  # 这就是支点应该在的位置（从左端开始算）
+	# 支点位置保持固定
+	fulcrum.position = Vector2(561, 339)  # 使用场景中设置的固定位置
 	
-	# 计算支点的新位置
-	var lever_left = lever.position.x - lever_length/2  # 杠杆左端位置
-	var new_x = lever_left + (lever_length * relative_position)
+	# 根据力臂比例计算杠杆的位置
+	var relative_position = float(left_arm) / total_ratio
 	
-	# 使用动画移动支点
-	var tween = create_tween()
-	tween.tween_property(fulcrum, "position:x", new_x, 1.0)\
-		.set_trans(Tween.TRANS_QUAD)\
-		.set_ease(Tween.EASE_IN_OUT)
+	# 计算杠杆应该移动的位置，使支点位于正确的力臂比例处
+	var lever_x = fulcrum.position.x + lever_length * (relative_position - 0.5)
 	
-	# 保持y位置不变
-	fulcrum.position.y = 470
+	# 设置杠杆位置，保持Y坐标不变
+	lever.position = Vector2(lever_x, 315)
 
 func _on_ending_dialogue_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
