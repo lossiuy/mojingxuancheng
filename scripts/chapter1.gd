@@ -6,7 +6,7 @@ var is_balanced = false
 var can_rotate = false  # 是否可以旋转杠杆
 var stone_height = 40  # 每个石头的高度
 var current_stone_count = 0  # 当前石头数量
-var people_count = 3  # 第一关3个人
+var people_count = 2  # 第一关2个人
 var current_level = 1
 var left_arm = 1  # 左力臂比例
 var right_arm = 1  # 右力臂比例
@@ -67,14 +67,20 @@ func _ready():
 
 func update_dialogue_display(index):
 	var dialogue_text = dialogues[index]
+	var speaker_label = $DialogueUI/DialogueBox/SpeakerName
+	
 	if is_showing_ending:
 		# 结局对话显示逻辑
+		$DialogueUI/DialogueBox/StartButton.hide()  # 在结局对话时隐藏开始按钮
+		
 		if ending_dialogue_index in [0, 4]:  # 纯旁白部分
 			$DialogueUI/NarrationText.text = ending_dialogues[ending_dialogue_index]
 			$DialogueUI/NarrationText.show()
 			$DialogueUI/DialogueBox.hide()
 		elif ending_dialogue_index == 3:  # 阿明的心理活动
 			$DialogueUI/DialogueBox/DialogueText.text = ending_dialogues[ending_dialogue_index]
+			speaker_label.text = "阿明"
+			speaker_label.position.x = 157  # 左侧位置
 			$DialogueUI/NarrationText.hide()
 			$DialogueUI/DialogueBox.show()
 			# 心理活动时只显示阿明头像
@@ -82,36 +88,39 @@ func update_dialogue_display(index):
 			$DialogueUI/DialogueBox/BlackmanPortrait.visible = false
 		else:  # 对话部分
 			$DialogueUI/DialogueBox/DialogueText.text = ending_dialogues[ending_dialogue_index]
+			if ending_dialogue_index in [1, 2]:
+				speaker_label.text = "黑衣人"
+				speaker_label.position.x = 800  # 右侧位置
+			else:
+				speaker_label.text = "阿明"
+				speaker_label.position.x = 157  # 左侧位置
 			$DialogueUI/NarrationText.hide()
 			$DialogueUI/DialogueBox.show()
-			
-			# 只在说话时显示对应的头像
-			$DialogueUI/DialogueBox/BlackmanPortrait.visible = (ending_dialogue_index in [1, 2])
-			$DialogueUI/DialogueBox/MingPortrait.visible = (ending_dialogue_index == 5)
-		
-		# 结局对话时始终隐藏开始按钮
-		$DialogueUI/DialogueBox/StartButton.hide()
 	else:
 		# 开场对话显示逻辑
-		if index in [0, 1, 7]:  # 纯旁白部分
+		if index in [0, 1]:  # 纯旁白部分
 			$DialogueUI/NarrationText.text = dialogue_text
 			$DialogueUI/NarrationText.show()
 			$DialogueUI/DialogueBox.hide()
-		else:  # 对话和心理活动部分
+		elif index == 5:  # 阿明思考部分
 			$DialogueUI/DialogueBox/DialogueText.text = dialogue_text
+			speaker_label.text = "阿明"
+			speaker_label.position.x = 157  # 左侧位置
 			$DialogueUI/NarrationText.hide()
 			$DialogueUI/DialogueBox.show()
-			
-			# 黑衣人消失后的对话和心理活动不显示黑衣人头像
-			$DialogueUI/DialogueBox/BlackmanPortrait.visible = (index in [2, 4])
-			
-			# 阿明思考时只显示阿明的头像
-			if index == 5:  # 思考墨经的部分
-				$DialogueUI/DialogueBox/MingPortrait.modulate = Color(1, 1, 1, 1)
-				$DialogueUI/DialogueBox/BlackmanPortrait.hide()
-			
-			# 最后一句对话显示开始按钮
-			$DialogueUI/DialogueBox/StartButton.visible = (index == dialogues.size() - 1)
+		else:  # 对话部分
+			$DialogueUI/DialogueBox/DialogueText.text = dialogue_text
+			if index in [2, 4]:
+				speaker_label.text = "黑衣人"
+				speaker_label.position.x = 800  # 右侧位置
+			else:
+				speaker_label.text = "阿明"
+				speaker_label.position.x = 157  # 左侧位置
+			$DialogueUI/NarrationText.hide()
+			$DialogueUI/DialogueBox.show()
+	
+	# 只在开场对话的最后一句显示开始按钮
+	$DialogueUI/DialogueBox/StartButton.visible = (index == dialogues.size() - 1 and not is_showing_ending)
 
 func _on_dialogue_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -174,8 +183,8 @@ func _on_confirm_pressed():
 	if current_stone_weight == 0:
 		return
 		
-	var moment_left = current_stone_weight * left_arm
-	var moment_right = people_count * people_weight * right_arm
+	var moment_left = current_stone_weight * right_arm  # 使用右侧力臂（实际的左侧）
+	var moment_right = people_count * people_weight * left_arm  # 使用左侧力臂（实际的右侧）
 	
 	if moment_left == moment_right:
 		show_success(moment_left)
@@ -212,14 +221,13 @@ func _on_next_pressed():
 		if ending_dialogue_index < ending_dialogues.size():
 			update_dialogue_display(ending_dialogue_index)
 		else:
-			# 对话结束后直接返回目录地图页面
 			get_tree().change_scene_to_file("res://content.tscn")
 		return
 		
 	current_level += 1
 	match current_level:
 		2:
-			people_count = 2  # 2个难民
+			people_count = 3  # 第二关3个难民
 			left_arm = 1
 			right_arm = 2
 			var level_hint = "第二关：右力臂(200)是左力臂(100)的2倍\n需要的石头重量 = 右力臂(%d) × 难民重量(%dkg) ÷ 左力臂(%d) = %dkg" % [
@@ -232,7 +240,7 @@ func _on_next_pressed():
 			$"UI#ResultLabel".modulate = Color(0, 0, 0)
 			$"UI#ResultLabel".show()
 		3:
-			people_count = 3  # 3个难民
+			people_count = 1  # 第三关1个难民
 			left_arm = 3
 			right_arm = 1
 			var level_hint = "第三关：左力臂(300)是右力臂(100)的3倍\n需要的石头重量 = 右力臂(%d) × 难民重量(%dkg) ÷ 左力臂(%d) = %dkg" % [
@@ -383,7 +391,8 @@ func update_weight_display():
 func update_torque_ratio():
 	# 更新力臂比例显示
 	var hint = "力臂比例 = 左：右 = %d：%d\n左力臂长度 = %d, 右力臂长度 = %d" % [
-		left_arm, right_arm, left_arm * 100, right_arm * 100
+		right_arm, left_arm,  # 交换左右力臂比例
+		right_arm * 100, left_arm * 100  # 交换左右力臂长度
 	]
 	$"UI#TorqueLabel".text = hint
 
@@ -454,10 +463,10 @@ func show_success(moment):
 			if not $DialogueUI/NarrationText.gui_input.is_connected(_on_ending_dialogue_input):
 				$DialogueUI/NarrationText.gui_input.connect(_on_ending_dialogue_input)
 	else:
-		# 前两关显示成功提示和下一关按钮
+		# 修改成功提示信息
 		var message = "左边力矩 = 右边力矩 = %d（%d力臂×%dkg）\n拯救成功！请进入下一关拯救其他难民！" % [
 			moment,
-			left_arm,
+			right_arm,  # 使用正确的力臂
 			current_stone_weight
 		]
 		$"UI#ResultLabel".text = message
@@ -512,11 +521,16 @@ func show_failure():
 	# 先重置杠杆位置
 	update_fulcrum_position()
 	
-	if current_stone_weight * left_arm > people_count * people_weight * right_arm:
-		rotation_amount = -0.5
+	# 计算左右力矩
+	var moment_left = current_stone_weight * right_arm  # 使用右侧力臂（实际的左侧）
+	var moment_right = people_count * people_weight * left_arm  # 使用左侧力臂（实际的右侧）
+	
+	# 左边力矩大时往左倾斜，右边力矩大时往右倾斜
+	if moment_left > moment_right:
+		rotation_amount = -0.5  # 往左倾斜
 		slide_direction = -1.0
 	else:
-		rotation_amount = 0.5
+		rotation_amount = 0.5   # 往右倾斜
 		slide_direction = 1.0
 	
 	# 然后旋转

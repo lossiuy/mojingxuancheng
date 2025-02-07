@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cps1hadsxqbjx"]
+[gd_scene load_steps=9 format=3 uid="uid://cps1hadsxqbjx"]
 
 [ext_resource type="Script" path="res://scripts/chapter1.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://be1k4f6wdhuda" path="res://images/bg3.jpg" id="2_background"]
@@ -7,6 +7,13 @@
 [ext_resource type="Texture2D" uid="uid://b8b70wawe5b7o" path="res://images/character-blackman-chat.png" id="character-blackman-chat"]
 [ext_resource type="Texture2D" uid="uid://cjw5x0lnrc8qv" path="res://images/character-ming-chat.png" id="character-ming-chat"]
 [ext_resource type="Texture2D" uid="uid://cpdqucjhjqspc" path="res://images/game-bg.png" id="game_background"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xxxx"]
+bg_color = Color(1, 1, 1, 0.8)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="Chapter1" type="Control"]
 layout_mode = 3
@@ -143,10 +150,10 @@ text = "重置"
 [node name="UI#ResultLabel" type="Label" parent="."]
 visible = false
 layout_mode = 0
-offset_left = 493.0
-offset_top = 212.0
-offset_right = 683.0
-offset_bottom = 262.0
+offset_left = 467.0
+offset_top = 175.0
+offset_right = 667.0
+offset_bottom = 255.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 20
 text = "成功！"
@@ -155,10 +162,10 @@ horizontal_alignment = 1
 [node name="UI#NextButton" type="Button" parent="."]
 visible = false
 layout_mode = 0
-offset_left = 492.0
-offset_top = 320.0
-offset_right = 592.0
-offset_bottom = 351.0
+offset_left = 518.0
+offset_top = 271.0
+offset_right = 618.0
+offset_bottom = 302.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "下一关"
 
@@ -207,14 +214,16 @@ color = Color(0, 0, 0, 0.5)
 
 [node name="NarrationText" type="Label" parent="DialogueUI"]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -400.0
-offset_top = 50.0
-offset_right = 400.0
-offset_bottom = 150.0
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 50.0
+offset_top = -50.0
+offset_right = -50.0
+offset_bottom = 50.0
 grow_horizontal = 2
+grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 24
 text = "旁白文本"
@@ -224,32 +233,30 @@ autowrap_mode = 3
 
 [node name="DialogueBox" type="Panel" parent="DialogueUI"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -483.0
-offset_top = 95.0
-offset_right = 477.0
-offset_bottom = 295.0
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 25.0
+offset_top = -198.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_xxxx")
 
 [node name="DialogueText" type="Label" parent="DialogueUI/DialogueBox"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 136.0
-offset_top = 20.0
-offset_right = -90.0
-offset_bottom = -20.0
+offset_left = 227.0
+offset_top = 36.0
+offset_right = -162.0
+offset_bottom = -63.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.955963, 0.955963, 0.955963, 1)
-theme_override_font_sizes/font_size = 24
-text = "对话内容"
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "对话文本"
 autowrap_mode = 3
 
 [node name="MingPortrait" type="TextureRect" parent="DialogueUI/DialogueBox"]
@@ -257,10 +264,10 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = -251.0
-offset_top = -371.0
-offset_right = 297.0
-offset_bottom = 659.0
+offset_left = -173.0
+offset_top = -363.0
+offset_right = 327.0
+offset_bottom = 637.0
 grow_vertical = 2
 texture = ExtResource("character-ming-chat")
 expand_mode = 1
@@ -273,10 +280,10 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -232.0
-offset_top = -410.0
-offset_right = 293.0
-offset_bottom = 628.0
+offset_left = -292.0
+offset_top = -396.0
+offset_right = 208.0
+offset_bottom = 604.0
 grow_horizontal = 0
 grow_vertical = 2
 texture = ExtResource("character-blackman-chat")
@@ -297,6 +304,16 @@ offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "开始拯救"
+
+[node name="SpeakerName" type="Label" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+offset_left = 157.0
+offset_top = 4.0
+offset_right = 357.0
+offset_bottom = 38.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "阿明"
 
 [node name="BackButton" type="Button" parent="."]
 layout_mode = 0
