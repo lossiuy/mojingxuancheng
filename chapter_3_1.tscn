@@ -1,0 +1,190 @@
+[gd_scene load_steps=8 format=3 uid="uid://dswtj3x6axmb"]
+
+[ext_resource type="Script" path="res://scripts/chapter_3_1.gd" id="1_jjhrh"]
+[ext_resource type="Texture2D" uid="uid://dsx3ss66t2xyf" path="res://images/mirror-bg.png" id="2_ba48f"]
+[ext_resource type="Texture2D" uid="uid://b1506r2qpxivw" path="res://images/mirror2.png" id="3_1ikbr"]
+[ext_resource type="Texture2D" uid="uid://cpdqucjhjqspc" path="res://images/game-bg.png" id="4_me02h"]
+[ext_resource type="Texture2D" uid="uid://cjw5x0lnrc8qv" path="res://images/character-ming-chat.png" id="5_2v7a4"]
+[ext_resource type="Texture2D" uid="uid://b8b70wawe5b7o" path="res://images/character-blackman-chat.png" id="6_x67h0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cgl3e"]
+bg_color = Color(1, 1, 1, 0.8)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="Chapter3-1" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jjhrh")
+
+[node name="HallBG" type="TextureRect" parent="."]
+offset_left = -7.0
+offset_right = 1337.0
+offset_bottom = 768.0
+scale = Vector2(0.871546, 0.865711)
+texture = ExtResource("2_ba48f")
+stretch_mode = 6
+
+[node name="RotatableMirror" type="TextureButton" parent="."]
+offset_left = 507.0
+offset_top = 335.0
+offset_right = 830.0
+offset_bottom = 375.0
+scale = Vector2(0.523365, 0.904762)
+texture_normal = ExtResource("3_1ikbr")
+
+[node name="GameBackground" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_me02h")
+stretch_mode = 6
+
+[node name="GameElements" type="Node2D" parent="GameBackground"]
+position = Vector2(0, 100)
+
+[node name="DialogueUI" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_right = 25.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5)
+
+[node name="NarrationText" type="Label" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 50.0
+offset_top = -50.0
+offset_right = -50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "旁白文本"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DialogueBox" type="Panel" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 25.0
+offset_top = -198.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_cgl3e")
+
+[node name="DialogueText" type="Label" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 227.0
+offset_top = 36.0
+offset_right = -162.0
+offset_bottom = -63.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "对话文本"
+autowrap_mode = 3
+
+[node name="MingPortrait" type="TextureRect" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -173.0
+offset_top = -363.0
+offset_right = 327.0
+offset_bottom = 637.0
+grow_vertical = 2
+texture = ExtResource("5_2v7a4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BlackmanPortrait" type="TextureRect" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -292.0
+offset_top = -396.0
+offset_right = 208.0
+offset_bottom = 604.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("6_x67h0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StartButton" type="Button" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -40.0
+offset_right = 50.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "开始挑战"
+
+[node name="SpeakerName" type="Label" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+offset_left = 157.0
+offset_top = 4.0
+offset_right = 357.0
+offset_bottom = 38.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "阿明"
+
+[node name="BackButton" type="Button" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 120.0
+offset_bottom = 60.0
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 24
+text = "返回"
+flat = true
