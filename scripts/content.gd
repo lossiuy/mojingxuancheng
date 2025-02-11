@@ -94,5 +94,4 @@ func _on_chapter2_pressed():
 	pass
 
 func _on_chapter3_pressed():
-	# 待实现
-	pass 
+	get_tree().change_scene_to_file("res://chapter3.tscn")
