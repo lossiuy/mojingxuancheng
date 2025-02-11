@@ -1,7 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://c84hosg7oyref"]
+[gd_scene load_steps=9 format=3 uid="uid://c84hosg7oyref"]
 
 [ext_resource type="Script" path="res://scripts/chapter2.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://dqu8m8ycspqdm" path="res://images/bg4.jpg" id="2_4vap5"]
+[ext_resource type="Texture2D" uid="uid://cpdqucjhjqspc" path="res://images/game-bg.png" id="3_wdhle"]
+[ext_resource type="Texture2D" uid="uid://dgfed1bibf5o" path="res://images/savegame-lever.png" id="4_hc6on"]
+[ext_resource type="Texture2D" uid="uid://blkiwt6ogla0m" path="res://images/savegame-dot.png" id="5_neq8q"]
+[ext_resource type="Texture2D" uid="uid://cjw5x0lnrc8qv" path="res://images/character-ming-chat.png" id="6_xojh3"]
+[ext_resource type="Texture2D" uid="uid://b8b70wawe5b7o" path="res://images/character-blackman-chat.png" id="7_jhu81"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_glt08"]
+bg_color = Color(1, 1, 1, 0.8)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="Chapter2" type="Control"]
 layout_mode = 3
@@ -29,3 +41,288 @@ offset_top = 30.0
 offset_right = 90.0
 offset_bottom = 70.0
 text = "返回"
+
+[node name="GameBackground" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_wdhle")
+stretch_mode = 6
+
+[node name="GameElements" type="Node2D" parent="GameBackground"]
+position = Vector2(0, 100)
+
+[node name="Lever" type="StaticBody2D" parent="GameBackground/GameElements"]
+position = Vector2(563, 315)
+
+[node name="LeverBar" type="Sprite2D" parent="GameBackground/GameElements/Lever"]
+scale = Vector2(0.8, 0.610151)
+texture = ExtResource("4_hc6on")
+
+[node name="StoneArea" type="Node2D" parent="GameBackground/GameElements/Lever"]
+position = Vector2(-187, -46.55)
+
+[node name="PeopleArea" type="Node2D" parent="GameBackground/GameElements/Lever"]
+position = Vector2(330, -46.55)
+
+[node name="Fulcrum" type="Sprite2D" parent="GameBackground/GameElements"]
+position = Vector2(561, 339)
+scale = Vector2(0.5, 0.516176)
+texture = ExtResource("5_neq8q")
+
+[node name="UI_WeightInfo#CurrentWeight" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 50.0
+offset_right = -100.0
+offset_bottom = 73.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "已选重量：0 kg"
+horizontal_alignment = 1
+
+[node name="UI_WeightInfo#TargetWeight" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 100.0
+offset_top = 50.0
+offset_right = 300.0
+offset_bottom = 73.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "目标重量：10 kg"
+horizontal_alignment = 1
+
+[node name="UI#StoneButtons" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 50.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="UI#ConfirmButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -50.0
+offset_right = -50.0
+offset_bottom = -19.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+text = "确定"
+
+[node name="UI#CancelButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_right = -50.0
+offset_bottom = 31.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+text = "重置"
+
+[node name="UI#ResultLabel" type="Label" parent="."]
+visible = false
+offset_left = 467.0
+offset_top = 175.0
+offset_right = 667.0
+offset_bottom = 255.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "成功！"
+horizontal_alignment = 1
+
+[node name="UI#NextButton" type="Button" parent="."]
+visible = false
+offset_left = 518.0
+offset_top = 271.0
+offset_right = 618.0
+offset_bottom = 302.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "下一关"
+
+[node name="UI#LevelLabel" type="Label" parent="."]
+offset_left = 400.0
+offset_top = 20.0
+offset_right = 600.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "第1关"
+horizontal_alignment = 1
+
+[node name="UI#TorqueLabel" type="Label" parent="."]
+visible = false
+offset_left = 400.0
+offset_top = 100.0
+offset_right = 600.0
+offset_bottom = 140.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "力臂比例 = 左：右 = 1：1"
+horizontal_alignment = 1
+
+[node name="DialogueUI" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_right = 25.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5)
+
+[node name="NarrationText" type="Label" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 50.0
+offset_top = -50.0
+offset_right = -50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "旁白文本"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DialogueBox" type="Panel" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 25.0
+offset_top = -198.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_glt08")
+
+[node name="DialogueText" type="Label" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 227.0
+offset_top = 36.0
+offset_right = -162.0
+offset_bottom = -63.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "对话文本"
+autowrap_mode = 3
+
+[node name="MingPortrait" type="TextureRect" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -173.0
+offset_top = -363.0
+offset_right = 327.0
+offset_bottom = 637.0
+grow_vertical = 2
+texture = ExtResource("6_xojh3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BlackmanPortrait" type="TextureRect" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -292.0
+offset_top = -396.0
+offset_right = 208.0
+offset_bottom = 604.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("7_jhu81")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StartButton" type="Button" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -40.0
+offset_right = 50.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "开始拯救"
+
+[node name="SpeakerName" type="Label" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+offset_left = 157.0
+offset_top = 4.0
+offset_right = 357.0
+offset_bottom = 38.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "阿明"
+
+[node name="BackButton2" type="Button" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 120.0
+offset_bottom = 60.0
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 24
+text = "返回"
+flat = true

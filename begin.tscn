@@ -186,14 +186,15 @@ volume_db = -10.0
 autoplay = true
 
 [node name="SetButton" type="TextureButton" parent="."]
+modulate = Color(1, 1, 1, 0.8)
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -96.0
+offset_left = -80.0
 offset_top = 20.0
 offset_right = -20.0
-offset_bottom = 93.0
+offset_bottom = 80.0
 grow_horizontal = 0
 texture_normal = ExtResource("6_set")
 ignore_texture_size = true

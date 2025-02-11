@@ -10,15 +10,8 @@ func _ready():
 	# 初始隐藏设置面板
 	$SettingsPanel.hide()
 	
-	# 加载字体
-	var font = load("res://方正榜书行简体.ttf")
-	
-	# 设置按钮字体
-	$SetButton.add_theme_font_override("font", font)
-	$SetButton.add_theme_font_size_override("font_size", 32)  # 增大字号
-	
-	$SettingsPanel/CloseButton.add_theme_font_override("font", font)
-	$SettingsPanel/CloseButton.add_theme_font_size_override("font_size", 32)  # 增大字号
+	# 初始化音量滑块的值
+	$SettingsPanel/VolumeControl/VolumeSlider.value = 50  # 设置初始音量为50%
 
 func _on_click_area_pressed():
 	if $SettingsPanel.visible:
@@ -27,8 +20,8 @@ func _on_click_area_pressed():
 	$AnimationPlayer.play("fade_out")
 	await $AnimationPlayer.animation_finished
 	
+	get_tree().set_meta("from_begin", true)
 	AudioManager.change_bgm("res://music/bgm2.mp3")
-	get_tree().set_meta("from_begin", true)  # 设置元数据
 	get_tree().change_scene_to_file("res://content.tscn")
 
 func _on_set_button_pressed():
@@ -38,11 +31,11 @@ func _on_close_button_pressed():
 	$SettingsPanel.hide()
 
 func _on_volume_changed(value):
-	var volume = -80.0 if value == 0 else (value - 100)
-	AudioManager.bgm_player.volume_db = value
-
-func _on_start_pressed():
-	# 使用参数传递方式切换场景
-	get_tree().change_scene_to_packed(preload("res://content.tscn"))
-	# 设置全局参数
-	get_node("/root/Global").from_begin = true
+	# 将滑块值（0-100）转换为分贝值（-80到0）
+	# 使用对数曲线使音量变化更自然
+	var volume_db = -40.0 * (1.0 - (value / 100.0))
+	if value == 0:
+		volume_db = -80.0  # 静音
+	
+	# 设置音频播放器的音量
+	AudioManager.set_volume(volume_db)

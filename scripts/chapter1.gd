@@ -1,7 +1,7 @@
 extends Control
 
 var current_stone_weight = 0
-var people_weight = 60  # 每个难民60kg
+var people_weight = 2.5  # 每个难民2.5石(75kg)
 var is_balanced = false
 var can_rotate = false  # 是否可以旋转杠杆
 var stone_height = 40  # 每个石头的高度
@@ -38,9 +38,26 @@ func _ready():
 	$Background.visible = true
 	$Background.modulate = Color(1, 1, 1, 1)  # 正常亮度
 	$BackButton.pressed.connect(_on_back_pressed)
+	
+	# 修改按钮为 TextureButton 并连接信号
+	$"UI#ConfirmButton".texture_normal = load("res://images/confirm.png")
+	$"UI#CancelButton".texture_normal = load("res://images/reset.png")
+	$"UI#NextButton".texture_normal = load("res://images/nextlevel.png")
+	
+	# 连接按钮信号
 	$"UI#ConfirmButton".pressed.connect(_on_confirm_pressed)
 	$"UI#CancelButton".pressed.connect(_on_cancel_pressed)
-	$"UI#NextButton".pressed.connect(_on_next_pressed)
+	$"UI#NextButton".pressed.connect(_on_next_level_pressed)
+	
+	# 设置按钮的大小和缩放模式
+	$"UI#ConfirmButton".ignore_texture_size = true
+	$"UI#ConfirmButton".stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	
+	$"UI#CancelButton".ignore_texture_size = true
+	$"UI#CancelButton".stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	
+	$"UI#NextButton".ignore_texture_size = true
+	$"UI#NextButton".stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	
 	# 隐藏游戏UI
 	$GameBackground/GameElements.hide()
@@ -61,9 +78,12 @@ func _ready():
 	$DialogueUI/NarrationText.mouse_filter = Control.MOUSE_FILTER_STOP
 	$DialogueUI/DialogueBox.gui_input.connect(_on_dialogue_input)
 	$DialogueUI/NarrationText.gui_input.connect(_on_dialogue_input)
-	$DialogueUI/DialogueBox/StartButton.pressed.connect(_on_start_game)  # 更新按钮路径
+	$DialogueUI/DialogueBox/StartButton.pressed.connect(_on_start_game)
 	$DialogueUI/DialogueBox/StartButton.hide()
-	$GameBackground.visible = false  # 初始时隐藏游戏背景
+	$GameBackground.visible = false
+	
+	# 移除创建节点的代码，改为获取已有节点的引用
+	$QuestionButton.pressed.connect(_on_question_pressed)
 
 func update_dialogue_display(index):
 	var dialogue_text = dialogues[index]
@@ -132,50 +152,6 @@ func _on_dialogue_input(event):
 			if dialogue_index == dialogues.size() - 1:
 				$DialogueUI/DialogueBox/StartButton.show()
 
-func update_portrait_modulate(index):
-	var ming_portrait = $DialogueUI/DialogueBox/MingPortrait
-	var blackman_portrait = $DialogueUI/DialogueBox/BlackmanPortrait
-	
-	if is_showing_ending:
-		# 结局对话的显示逻辑
-		ming_portrait.show()  # 主角头像始终显示
-		match ending_dialogue_index:
-			0, 4: # 纯旁白
-				blackman_portrait.hide()
-				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-			1, 2: # 黑衣人说话
-				blackman_portrait.show()
-				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-				blackman_portrait.modulate = Color(1, 1, 1, 1)
-			3: # 阿明思考
-				blackman_portrait.hide()
-				ming_portrait.modulate = Color(1, 1, 1, 1)
-			5: # 阿明说话
-				blackman_portrait.hide()
-				ming_portrait.modulate = Color(1, 1, 1, 1)
-	else:
-		# 开场对话的显示逻辑
-		ming_portrait.show()  # 主角头像始终显示
-		match index:
-			0, 1: # 旁白
-				blackman_portrait.hide()
-				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-			2: # 黑衣人出现并说话
-				blackman_portrait.show()
-				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-				blackman_portrait.modulate = Color(1, 1, 1, 1)
-			3: # 阿明说话
-				blackman_portrait.show()  # 黑衣人还在场
-				ming_portrait.modulate = Color(1, 1, 1, 1)
-				blackman_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-			4: # 黑衣人最后说话
-				blackman_portrait.show()
-				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
-				blackman_portrait.modulate = Color(1, 1, 1, 1)
-			5, 6: # 黑衣人消失，阿明思考和旁白
-				blackman_portrait.hide()
-				ming_portrait.modulate = Color(1, 1, 1, 1)
-
 func _on_back_pressed():
 	get_tree().change_scene_to_file("res://content.tscn")
 
@@ -215,86 +191,6 @@ func _on_cancel_pressed():
 	$"UI#NextButton".hide()
 	$"UI#ConfirmButton".disabled = false
 
-func _on_next_pressed():
-	if is_showing_ending:
-		ending_dialogue_index += 1
-		if ending_dialogue_index < ending_dialogues.size():
-			update_dialogue_display(ending_dialogue_index)
-		else:
-			get_tree().change_scene_to_file("res://content.tscn")
-		return
-		
-	current_level += 1
-	match current_level:
-		2:
-			people_count = 3  # 第二关3个难民
-			left_arm = 1
-			right_arm = 2
-			var level_hint = "第二关：右力臂(200)是左力臂(100)的2倍\n需要的石头重量 = 右力臂(%d) × 难民重量(%dkg) ÷ 左力臂(%d) = %dkg" % [
-				right_arm * 100,
-				people_count * people_weight,
-				left_arm * 100,
-				people_count * people_weight * 2
-			]
-			$"UI#ResultLabel".text = level_hint
-			$"UI#ResultLabel".modulate = Color(0, 0, 0)
-			$"UI#ResultLabel".show()
-		3:
-			people_count = 1  # 第三关1个难民
-			left_arm = 3
-			right_arm = 1
-			var level_hint = "第三关：左力臂(300)是右力臂(100)的3倍\n需要的石头重量 = 右力臂(%d) × 难民重量(%dkg) ÷ 左力臂(%d) = %dkg" % [
-				right_arm * 100,
-				people_count * people_weight,
-				left_arm * 100,
-				people_count * people_weight / 3
-			]
-			$"UI#ResultLabel".text = level_hint
-			$"UI#ResultLabel".modulate = Color(0, 0, 0)
-			$"UI#ResultLabel".show()
-		_:
-			# 显示结局对话
-			is_showing_ending = true
-			ending_dialogue_index = 0
-			
-			# 隐藏游戏UI
-			$GameBackground/GameElements.hide()
-			$"UI#StoneButtons".hide()
-			$"UI#ConfirmButton".hide()
-			$"UI#CancelButton".hide()
-			$"UI_WeightInfo#CurrentWeight".hide()
-			$"UI_WeightInfo#TargetWeight".hide()
-			$"UI#LevelLabel".hide()
-			$"UI#TorqueLabel".hide()
-			$"UI#ResultLabel".hide()
-			$"UI#NextButton".hide()
-			
-			# 显示结局对话UI
-			$DialogueUI.show()
-			update_dialogue_display(0)  # 使用统一的显示函数
-			update_portrait_modulate(0)
-			
-			# 连接结局对话的输入事件
-			if not $DialogueUI/DialogueBox.gui_input.is_connected(_on_ending_dialogue_input):
-				$DialogueUI/DialogueBox.gui_input.connect(_on_ending_dialogue_input)
-			return
-	
-	# 重置游戏状态
-	_on_cancel_pressed()
-	$"UI#NextButton".hide()
-	$"UI#ConfirmButton".disabled = false
-	
-	# 更新UI显示
-	update_weight_display()
-	update_level_display()
-	update_torque_ratio()
-	update_fulcrum_position()
-	
-	# 清除并重新生成石头按钮
-	for child in $"UI#StoneButtons".get_children():
-		child.queue_free()
-	setup_stones()
-
 func _on_start_game():
 	# 将场景背景调暗
 	var tween = create_tween()
@@ -318,6 +214,10 @@ func _on_start_game():
 	$"UI#LevelLabel".show()
 	$"UI#TorqueLabel".show()
 	
+	# 移除添加节点的代码，因为节点已经在场景中了
+	$QuestionButton.show()
+	$HintContainer.hide()  # 初始时隐藏提示容器
+	
 	# 初始化游戏
 	setup_game()
 	update_weight_display()
@@ -332,13 +232,24 @@ func setup_game():
 	setup_person()
 	
 func setup_stones():
-	var weights = [10, 20, 50]  # 新的石头重量选项
+	var weights = [0.25, 1.0, 5.0]  # 石头重量选项
+	var weight_textures = {
+		0.25: "res://images/0.25.png",
+		1.0: "res://images/1.00.png",
+		5.0: "res://images/5.00.png"
+	}
+	
+	var container = $"UI#StoneButtons"
+	container.add_theme_constant_override("separation", -20)  # 设置按钮之间的间距为负值，使按钮靠得更近
+	
 	for weight in weights:
-		var button = Button.new()
-		button.text = str(weight) + "kg"
+		var button = TextureButton.new()
+		button.texture_normal = load(weight_textures[weight])
 		button.pressed.connect(func(): add_weight(weight))
-		button.add_theme_color_override("font_color", Color(0, 0, 0, 1))
-		$"UI#StoneButtons".add_child(button)
+		button.ignore_texture_size = true
+		button.custom_minimum_size = Vector2(200, 100)
+		button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+		container.add_child(button)
 
 func setup_lever():
 	var lever = $GameBackground/GameElements/Lever
@@ -385,14 +296,13 @@ func add_weight(weight):
 	spawn_stone(weight)
 
 func update_weight_display():
-	$"UI_WeightInfo#CurrentWeight".text = "已选重量：%d kg" % current_stone_weight
-	$"UI_WeightInfo#TargetWeight".text = "难民总重量：%d kg" % (people_count * people_weight)
+	$"UI_WeightInfo#CurrentWeight".text = "石头重量：%.2f 石" % current_stone_weight
+	$"UI_WeightInfo#TargetWeight".text = "难民总重量：%.1f 石" % (people_count * people_weight)
 
 func update_torque_ratio():
 	# 更新力臂比例显示
-	var hint = "力臂比例 = 左：右 = %d：%d\n左力臂长度 = %d, 右力臂长度 = %d" % [
+	var hint = "力臂比例 = 左：右 = %d：%d" % [
 		right_arm, left_arm,  # 交换左右力臂比例
-		right_arm * 100, left_arm * 100  # 交换左右力臂长度
 	]
 	$"UI#TorqueLabel".text = hint
 
@@ -403,15 +313,15 @@ func spawn_stone(weight):
 	var stone_texture = ""
 	var stone_spacing = 45  # 默认间距
 	match weight:
-		10:  # 小石头
+		0.25:  # 小石头
 			stone_texture = "res://images/savegame-smallstone.png"
 			stone.scale = Vector2(0.3, 0.3)
 			stone_spacing = 35  # 小石头用更小的间距
-		20:  # 中等石头
+		1.0:  # 中等石头
 			stone_texture = "res://images/savegame-mediumstone.png"
 			stone.scale = Vector2(0.4, 0.4)
 			stone_spacing = 40  # 中等石头用中等间距
-		50:  # 大石头
+		5.0:  # 大石头
 			stone_texture = "res://images/savegame-bigstone.png"
 			stone.scale = Vector2(0.5, 0.5)
 			stone_spacing = 45  # 大石头保持原来的间距
@@ -436,7 +346,7 @@ func spawn_stone(weight):
 
 func show_success(moment):
 	if current_level == 3:
-		# 第三关成功后显示结局对话
+		# 显示结局对话
 		is_showing_ending = true
 		ending_dialogue_index = 0
 		
@@ -450,7 +360,6 @@ func show_success(moment):
 		$"UI#LevelLabel".hide()
 		$"UI#TorqueLabel".hide()
 		$"UI#ResultLabel".hide()
-		$"UI#NextButton".hide()
 		
 		# 显示结局对话UI
 		$DialogueUI.show()
@@ -464,15 +373,15 @@ func show_success(moment):
 				$DialogueUI/NarrationText.gui_input.connect(_on_ending_dialogue_input)
 	else:
 		# 修改成功提示信息
-		var message = "左边力矩 = 右边力矩 = %d（%d力臂×%dkg）\n拯救成功！请进入下一关拯救其他难民！" % [
-			moment,
-			right_arm,  # 使用正确的力臂
-			current_stone_weight
-		]
+		var message = "左边力矩 = 右边力矩\n拯救成功！请进入下一关拯救其他难民！"
 		$"UI#ResultLabel".text = message
 		$"UI#ResultLabel".modulate = Color(0, 1, 0)
 		$"UI#ResultLabel".show()
+		
+		# 显示下一关按钮
 		$"UI#NextButton".show()
+		$"UI#NextButton".move_to_front()
+		
 		$"UI#ConfirmButton".disabled = true
 	
 	# 旋转杠杆动画
@@ -509,8 +418,6 @@ func show_failure():
 	# 旋转杠杆动画
 	can_rotate = true
 	var tween = create_tween()
-	var rotation_amount = 0.0
-	var slide_direction = 1.0
 	
 	# 设置旋转中心点为支点位置
 	var fulcrum = $GameBackground/GameElements/Fulcrum
@@ -522,60 +429,74 @@ func show_failure():
 	update_fulcrum_position()
 	
 	# 计算左右力矩
-	var moment_left = current_stone_weight * right_arm  # 使用右侧力臂（实际的左侧）
-	var moment_right = people_count * people_weight * left_arm  # 使用左侧力臂（实际的右侧）
+	var moment_left = current_stone_weight * right_arm
+	var moment_right = people_count * people_weight * left_arm
 	
 	# 左边力矩大时往左倾斜，右边力矩大时往右倾斜
-	if moment_left > moment_right:
-		rotation_amount = -0.5  # 往左倾斜
-		slide_direction = -1.0
-	else:
-		rotation_amount = 0.5   # 往右倾斜
-		slide_direction = 1.0
+	var rotation_amount = -0.5 if moment_left > moment_right else 0.5
 	
-	# 然后旋转
-	tween.tween_property(lever, "rotation", rotation_amount, 0.5)
-	
-	# 等待一小段时间后开始滑落
-	tween.tween_interval(0.2)
-	
-	# 调整滑落距离，确保在视野内
+	# 先让所有物体下沉一点
 	for child in $GameBackground/GameElements/Lever.get_children():
 		if child is Sprite2D and child != $GameBackground/GameElements/Lever/LeverBar:
 			var original_pos = child.position
-			
-			if "@Sprite2D" in child.name:  # 人物
-				var target_x = -200 if slide_direction < 0 else original_pos.x
-				
-				# 第一阶段：沿着杆子滑到目标端
-				tween.parallel().tween_property(child, "position:x", 
-					target_x, 1.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-				
-				# 第二阶段：从末端掉落，先向上一点再下落
-				tween.parallel().tween_property(child, "position:y", 
-					original_pos.y - 10, 0.3).set_delay(1.0)  # 减小上移距离到10
-				tween.parallel().tween_property(child, "position:y", 
-					500, 0.7).set_delay(1.3)  # 然后下落
-			else:  # 石头
-				var target_x = original_pos.x if slide_direction < 0 else 60
-				
-				# 第一阶段：沿着杆子滑到目标端
-				tween.parallel().tween_property(child, "position:x", 
-					target_x, 1.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-				
-				# 第二阶段：从末端掉落，先向上一点再下落
-				tween.parallel().tween_property(child, "position:y", 
-					original_pos.y - 10, 0.3).set_delay(1.0)  # 减小上移距离到10
-				tween.parallel().tween_property(child, "position:y", 
-					500, 0.7).set_delay(1.3)  # 然后下落
+			tween.parallel().tween_property(child, "position:y", 
+				original_pos.y + 20, 1.0)
 	
-	# 等待动画结束后重置
+	# 等待下沉完成后开始倾斜
 	tween.tween_callback(func():
-		_on_cancel_pressed()  # 重置场景
-	).set_delay(2.5)
+		var tilt_tween = create_tween()
+		
+		# 执行倾斜动画
+		tilt_tween.tween_property(lever, "rotation", rotation_amount, 0.8)
+		
+		# 等待倾斜完成后开始滑落
+		tilt_tween.tween_callback(func():
+			var slide_tween = create_tween()
+			
+			# 获取杆子的两端点位置（在倾斜后）
+			var lever_bar = $GameBackground/GameElements/Lever/LeverBar
+			var lever_length = lever_bar.texture.get_width() * lever_bar.scale.x
+			var left_point = Vector2(-lever_length/2, 0)  # 杆子左端点（局部坐标）
+			var right_point = Vector2(lever_length/2, 0)  # 杆子右端点（局部坐标）
+			
+			# 将局部坐标转换为全局坐标
+			left_point = lever_bar.to_global(left_point)
+			right_point = lever_bar.to_global(right_point)
+			
+			# 计算杆子的方向向量
+			var direction = (right_point - left_point).normalized()
+			var slide_distance = 800
+			
+			# 移动石头和人物
+			for child in $GameBackground/GameElements/Lever.get_children():
+				if child is Sprite2D and child != $GameBackground/GameElements/Lever/LeverBar:
+					var original_pos = child.position
+					
+					# 计算滑落目标位置
+					var target_pos = original_pos
+					if rotation_amount < 0:  # 向左倾斜
+						target_pos -= direction * slide_distance  # 向右滑动
+					else:  # 向右倾斜
+						target_pos += direction * slide_distance  # 向左滑动
+					
+					# 创建滑落动画
+					slide_tween.parallel().tween_property(child, "position", 
+						target_pos, 1.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+			
+			# 等待滑落动画结束后重置
+			slide_tween.tween_callback(func():
+				_on_cancel_pressed()  # 重置场景
+			).set_delay(2.0)
+		).set_delay(0.8)  # 等待倾斜动画完成
+	).set_delay(1.0)  # 等待下沉动画完成
 
 func update_level_display():
-	$"UI#LevelLabel".text = "第%d关" % current_level
+	# 根据当前关卡显示对应的图片
+	var level_texture = load("res://images/level%d.png" % current_level)
+	if level_texture:
+		var texture_rect = $"UI#LevelLabel/LevelTexture"
+		if texture_rect:
+			texture_rect.texture = level_texture
 
 func update_fulcrum_position():
 	var fulcrum = $GameBackground/GameElements/Fulcrum
@@ -603,3 +524,135 @@ func _on_ending_dialogue_input(event):
 			update_portrait_modulate(ending_dialogue_index)
 		else:
 			get_tree().change_scene_to_file("res://content.tscn")
+
+func update_portrait_modulate(index):
+	var ming_portrait = $DialogueUI/DialogueBox/MingPortrait
+	var blackman_portrait = $DialogueUI/DialogueBox/BlackmanPortrait
+	
+	if is_showing_ending:
+		# 结局对话的显示逻辑
+		ming_portrait.show()  # 主角头像始终显示
+		match ending_dialogue_index:
+			0, 4: # 纯旁白
+				blackman_portrait.hide()
+				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
+			1, 2: # 黑衣人说话
+				blackman_portrait.show()
+				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
+				blackman_portrait.modulate = Color(1, 1, 1, 1)
+			3: # 阿明思考
+				blackman_portrait.hide()
+				ming_portrait.modulate = Color(1, 1, 1, 1)
+			5: # 阿明说话
+				blackman_portrait.hide()
+				ming_portrait.modulate = Color(1, 1, 1, 1)
+	else:
+		# 开场对话的显示逻辑
+		ming_portrait.show()  # 主角头像始终显示
+		match index:
+			0, 1: # 旁白
+				blackman_portrait.hide()
+				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
+			2: # 黑衣人出现并说话
+				blackman_portrait.show()
+				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
+				blackman_portrait.modulate = Color(1, 1, 1, 1)
+			3: # 阿明说话
+				blackman_portrait.show()  # 黑衣人还在场
+				ming_portrait.modulate = Color(1, 1, 1, 1)
+				blackman_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
+			4: # 黑衣人最后说话
+				blackman_portrait.show()
+				ming_portrait.modulate = Color(0.5, 0.5, 0.5, 1)
+				blackman_portrait.modulate = Color(1, 1, 1, 1)
+			5, 6: # 黑衣人消失，阿明思考和旁白
+				blackman_portrait.hide()
+				ming_portrait.modulate = Color(1, 1, 1, 1)
+
+func _on_next_level_pressed():
+	current_level += 1
+	match current_level:
+		2:
+			people_count = 3  # 第二关3个难民
+			left_arm = 1
+			right_arm = 2
+			var level_hint = "第二关：右力臂(200)是左力臂(100)的2倍\n需要的石头重量 = 右力臂(%d) × 难民重量(%.1f石) ÷ 左力臂(%d) = %.2f石" % [
+				right_arm * 100,
+				people_count * people_weight,
+				left_arm * 100,
+				people_count * people_weight * 2
+			]
+			$"UI#ResultLabel".text = level_hint
+			$"UI#ResultLabel".modulate = Color(0, 0, 0)
+			$"UI#ResultLabel".show()
+		3:
+			people_count = 1  # 第三关1个难民
+			left_arm = 3
+			right_arm = 1
+			var level_hint = "第三关：左力臂(300)是右力臂(100)的3倍\n需要的石头重量 = 右力臂(%d) × 难民重量(%.1f石) ÷ 左力臂(%d) = %.2f石" % [
+				right_arm * 100,
+				people_count * people_weight,
+				left_arm * 100,
+				float(people_count * people_weight) / 3.0
+			]
+			$"UI#ResultLabel".text = level_hint
+			$"UI#ResultLabel".modulate = Color(0, 0, 0)
+			$"UI#ResultLabel".show()
+		_:
+			# 显示结局对话
+			is_showing_ending = true
+			ending_dialogue_index = 0
+			
+			# 隐藏游戏UI
+			$GameBackground/GameElements.hide()
+			$"UI#StoneButtons".hide()
+			$"UI#ConfirmButton".hide()
+			$"UI#CancelButton".hide()
+			$"UI_WeightInfo#CurrentWeight".hide()
+			$"UI_WeightInfo#TargetWeight".hide()
+			$"UI#LevelLabel".hide()
+			$"UI#TorqueLabel".hide()
+			$"UI#ResultLabel".hide()
+			$"UI#NextButton".hide()
+			
+			# 显示结局对话UI
+			$DialogueUI.show()
+			update_dialogue_display(0)
+			update_portrait_modulate(0)
+			return
+	
+	# 重置游戏状态
+	_on_cancel_pressed()
+	$"UI#NextButton".hide()
+	$"UI#ConfirmButton".disabled = false
+	
+	# 更新UI显示
+	update_weight_display()
+	update_level_display()
+	update_torque_ratio()
+	update_fulcrum_position()
+	
+	# 清除并重新生成石头按钮
+	for child in $"UI#StoneButtons".get_children():
+		child.queue_free()
+	setup_stones()
+
+func _on_question_pressed():
+	if not $HintContainer.visible:
+		# 根据当前关卡显示不同提示
+		match current_level:
+			1:
+				$HintContainer/HintLabel.text = "第一关：左右力臂相等\n需要的石头重量 = 难民重量"
+			2:
+				$HintContainer/HintLabel.text = "第二关：左力臂是右力臂2倍\n需要的石头重量 = 难民重量 ÷ 2"
+			3:
+				$HintContainer/HintLabel.text = "第三关：左力臂是右力臂1/3\n需要的石头重量 = 难民重量 × 3"
+		
+		# 显示提示
+		$HintContainer.visible = true
+		
+		# 3秒后自动隐藏
+		var timer = get_tree().create_timer(3.0)
+		timer.timeout.connect(func(): $HintContainer.visible = false)
+	else:
+		$HintContainer.visible = false

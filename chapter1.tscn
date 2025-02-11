@@ -1,14 +1,18 @@
-[gd_scene load_steps=9 format=3 uid="uid://cps1hadsxqbjx"]
+[gd_scene load_steps=13 format=3 uid="uid://cps1hadsxqbjx"]
 
 [ext_resource type="Script" path="res://scripts/chapter1.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://be1k4f6wdhuda" path="res://images/bg3.jpg" id="2_background"]
 [ext_resource type="Texture2D" uid="uid://dgfed1bibf5o" path="res://images/savegame-lever.png" id="3_lever"]
 [ext_resource type="Texture2D" uid="uid://blkiwt6ogla0m" path="res://images/savegame-dot.png" id="4_dot"]
+[ext_resource type="Texture2D" uid="uid://devbaeftpryak" path="res://images/back.png" id="back_texture"]
 [ext_resource type="Texture2D" uid="uid://b8b70wawe5b7o" path="res://images/character-blackman-chat.png" id="character-blackman-chat"]
 [ext_resource type="Texture2D" uid="uid://cjw5x0lnrc8qv" path="res://images/character-ming-chat.png" id="character-ming-chat"]
+[ext_resource type="Texture2D" uid="uid://i58g3w7qagat" path="res://images/gamestart.png" id="gamestart_texture"]
 [ext_resource type="Texture2D" uid="uid://cpdqucjhjqspc" path="res://images/game-bg.png" id="game_background"]
+[ext_resource type="Texture2D" uid="uid://cve7y2x5swhm" path="res://images/question-bg.png" id="question-bg_texture"]
+[ext_resource type="Texture2D" uid="uid://doiqmknlfdetf" path="res://images/question.png" id="question_texture"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xxxx"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
 bg_color = Color(1, 1, 1, 0.8)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
@@ -51,7 +55,7 @@ texture = ExtResource("game_background")
 stretch_mode = 6
 
 [node name="GameElements" type="Node2D" parent="GameBackground"]
-position = Vector2(0, 100)
+position = Vector2(44, 100)
 
 [node name="Lever" type="StaticBody2D" parent="GameBackground/GameElements"]
 position = Vector2(563, 315)
@@ -76,14 +80,14 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -300.0
-offset_top = 50.0
-offset_right = -100.0
-offset_bottom = 73.0
+offset_left = -302.0
+offset_top = 89.0
+offset_right = -102.0
+offset_bottom = 117.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 20
-text = "已选重量：0 kg"
+text = "石头重量：0 石"
 horizontal_alignment = 1
 
 [node name="UI_WeightInfo#TargetWeight" type="Label" parent="."]
@@ -91,14 +95,14 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 100.0
-offset_top = 50.0
-offset_right = 300.0
-offset_bottom = 73.0
+offset_left = 102.0
+offset_top = 84.0
+offset_right = 302.0
+offset_bottom = 112.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 20
-text = "目标重量：10 kg"
+text = "目标重量：10 石"
 horizontal_alignment = 1
 
 [node name="UI#StoneButtons" type="VBoxContainer" parent="."]
@@ -106,87 +110,82 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 50.0
-offset_top = -100.0
-offset_right = 150.0
-offset_bottom = 100.0
+offset_left = 94.0
+offset_top = -159.0
+offset_right = 194.0
+offset_bottom = 21.0
 grow_vertical = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="UI#ConfirmButton" type="Button" parent="."]
+[node name="UI#ConfirmButton" type="TextureButton" parent="."]
 layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
+anchors_preset = 8
+anchor_left = 0.5
 anchor_top = 0.5
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -50.0
-offset_right = -50.0
-offset_bottom = -19.0
-grow_horizontal = 0
+offset_left = -200.0
+offset_top = 100.0
+offset_bottom = 200.0
+grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 18
-text = "确定"
+mouse_default_cursor_shape = 2
 
-[node name="UI#CancelButton" type="Button" parent="."]
+[node name="UI#CancelButton" type="TextureButton" parent="."]
 layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
+anchors_preset = 8
+anchor_left = 0.5
 anchor_top = 0.5
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_right = -50.0
-offset_bottom = 31.0
-grow_horizontal = 0
+offset_left = 40.0
+offset_top = 100.0
+offset_right = 240.0
+offset_bottom = 200.0
+grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 18
-text = "重置"
+mouse_default_cursor_shape = 2
 
 [node name="UI#ResultLabel" type="Label" parent="."]
 visible = false
 layout_mode = 0
-offset_left = 467.0
-offset_top = 175.0
-offset_right = 667.0
-offset_bottom = 255.0
+offset_left = 437.0
+offset_top = 232.0
+offset_right = 637.0
+offset_bottom = 312.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 20
 text = "成功！"
 horizontal_alignment = 1
 
-[node name="UI#NextButton" type="Button" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 518.0
-offset_top = 271.0
-offset_right = 618.0
-offset_bottom = 302.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "下一关"
+[node name="UI#LevelLabel" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -110.0
+offset_top = 2.0
+offset_right = 90.0
+offset_bottom = 102.0
+grow_horizontal = 2
 
-[node name="UI#LevelLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 400.0
-offset_top = 20.0
-offset_right = 600.0
-offset_bottom = 60.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 24
-text = "第1关"
-horizontal_alignment = 1
+[node name="LevelTexture" type="TextureRect" parent="UI#LevelLabel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="UI#TorqueLabel" type="Label" parent="."]
-visible = false
 layout_mode = 0
-offset_left = 400.0
-offset_top = 100.0
-offset_right = 600.0
-offset_bottom = 140.0
+offset_left = 472.0
+offset_top = 162.0
+offset_right = 672.0
+offset_bottom = 202.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 16
 text = "力臂比例 = 左：右 = 1：1"
@@ -241,7 +240,7 @@ offset_left = 25.0
 offset_top = -198.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_xxxx")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1")
 
 [node name="DialogueText" type="Label" parent="DialogueUI/DialogueBox"]
 layout_mode = 1
@@ -290,20 +289,22 @@ texture = ExtResource("character-blackman-chat")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StartButton" type="Button" parent="DialogueUI/DialogueBox"]
+[node name="StartButton" type="TextureButton" parent="DialogueUI/DialogueBox"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -50.0
-offset_top = -40.0
-offset_right = 50.0
-offset_bottom = -10.0
+offset_left = -99.5
+offset_top = -78.0
+offset_right = 100.5
+offset_bottom = 22.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "开始拯救"
+texture_normal = ExtResource("gamestart_texture")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="SpeakerName" type="Label" parent="DialogueUI/DialogueBox"]
 layout_mode = 1
@@ -315,16 +316,74 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "阿明"
 
-[node name="BackButton" type="Button" parent="."]
-layout_mode = 0
+[node name="BackButton" type="TextureButton" parent="."]
+modulate = Color(1, 1, 1, 0.8)
+layout_mode = 1
 offset_left = 20.0
 offset_top = 20.0
-offset_right = 120.0
-offset_bottom = 60.0
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 24
-text = "返回"
-flat = true
+offset_right = 80.0
+offset_bottom = 80.0
+texture_normal = ExtResource("back_texture")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="UI#NextButton" type="TextureButton" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = 150.0
+offset_right = 100.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+
+[node name="QuestionButton" type="TextureButton" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.8)
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 0
+offset_left = 100.0
+offset_top = 50.0
+offset_right = 100.0
+offset_bottom = 50.0
+texture_normal = ExtResource("question_texture")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="HintContainer" type="Control" parent="."]
+visible = false
+custom_minimum_size = Vector2(400, 100)
+anchors_preset = 0
+offset_left = 356.0
+offset_top = 112.0
+offset_right = 756.0
+offset_bottom = 212.0
+
+[node name="Background" type="TextureRect" parent="HintContainer"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 18.0
+offset_right = 973.0
+offset_bottom = 558.0
+rotation = 0.0121489
+mouse_filter = 2
+texture = ExtResource("question-bg_texture")
+stretch_mode = 5
+
+[node name="HintLabel" type="Label" parent="HintContainer"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 125.0
+offset_right = 340.0
+offset_bottom = 225.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
