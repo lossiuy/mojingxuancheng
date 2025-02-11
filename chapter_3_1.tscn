@@ -24,6 +24,7 @@ grow_vertical = 2
 script = ExtResource("1_jjhrh")
 
 [node name="HallBG" type="TextureRect" parent="."]
+layout_mode = 0
 offset_left = -7.0
 offset_right = 1337.0
 offset_bottom = 768.0
@@ -32,6 +33,7 @@ texture = ExtResource("2_ba48f")
 stretch_mode = 6
 
 [node name="RotatableMirror" type="TextureButton" parent="."]
+layout_mode = 0
 offset_left = 507.0
 offset_top = 335.0
 offset_right = 830.0
@@ -177,6 +179,7 @@ theme_override_font_sizes/font_size = 24
 text = "阿明"
 
 [node name="BackButton" type="Button" parent="."]
+layout_mode = 0
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 120.0

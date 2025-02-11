@@ -106,3 +106,19 @@ func _on_chapter2_pressed():
 
 func _on_chapter3_pressed():
 	get_tree().change_scene_to_file("res://chapter3.tscn")
+
+func _on_set_button_pressed():
+	$SettingsPanel.show()
+
+func _on_close_button_pressed():
+	$SettingsPanel.hide()
+
+func _on_volume_changed(value):
+	# 将滑块值（0-100）转换为分贝值（-80到0）
+	# 使用对数曲线使音量变化更自然
+	var volume_db = -40.0 * (1.0 - (value / 100.0))
+	if value == 0:
+		volume_db = -80.0  # 静音
+	
+	# 设置音频播放器的音量
+	AudioManager.set_volume(volume_db)
