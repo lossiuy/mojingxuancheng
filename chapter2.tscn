@@ -1,7 +1,41 @@
-[gd_scene load_steps=3 format=3 uid="uid://c84hosg7oyref"]
+[gd_scene load_steps=13 format=3 uid="uid://c84hosg7oyref"]
 
 [ext_resource type="Script" path="res://scripts/chapter2.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://dqu8m8ycspqdm" path="res://images/bg4.jpg" id="2_4vap5"]
+[ext_resource type="Texture2D" uid="uid://dqu8m8ycspqdm" path="res://images/bg4.jpg" id="2_background"]
+[ext_resource type="Texture2D" uid="uid://devbaeftpryak" path="res://images/back.png" id="back_texture"]
+[ext_resource type="Texture2D" uid="uid://b8b70wawe5b7o" path="res://images/character-blackman-chat.png" id="character-blackman-chat"]
+[ext_resource type="Texture2D" uid="uid://cjw5x0lnrc8qv" path="res://images/character-ming-chat.png" id="character-ming-chat"]
+[ext_resource type="Texture2D" uid="uid://i58g3w7qagat" path="res://images/gamestart.png" id="gamestart_texture"]
+[ext_resource type="Texture2D" uid="uid://cpdqucjhjqspc" path="res://images/game-bg.png" id="game_background"]
+[ext_resource type="Texture2D" uid="uid://dl2u0yw3y3l1s" path="res://images/character-ming.png" id="player_texture"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(1, 1, 1, 0.8)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.2, 0.2, 0.2, 0.8)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stone"]
+bg_color = Color(0.8, 0.2, 0.2, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_float"]
+bg_color = Color(0.2, 0.2, 0.8, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [node name="Chapter2" type="Control"]
 layout_mode = 3
@@ -19,13 +53,291 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_4vap5")
-stretch_mode = 6
+texture = ExtResource("2_background")
 
-[node name="BackButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 30.0
-offset_top = 30.0
-offset_right = 90.0
-offset_bottom = 70.0
-text = "返回"
+[node name="BackButton" type="TextureButton" parent="."]
+modulate = Color(1, 1, 1, 0.8)
+layout_mode = 1
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 80.0
+offset_bottom = 80.0
+texture_normal = ExtResource("back_texture")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="DialogueUI" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5)
+
+[node name="NarrationText" type="Label" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 50.0
+offset_top = -50.0
+offset_right = -50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "旁白文本"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DialogueBox" type="Panel" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 25.0
+offset_top = -198.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="MingPortrait" type="TextureRect" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -173.0
+offset_top = -363.0
+offset_right = 327.0
+offset_bottom = 637.0
+grow_vertical = 2
+texture = ExtResource("character-ming-chat")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BlackmanPortrait" type="TextureRect" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -309.0
+offset_top = -396.0
+offset_right = 191.0
+offset_bottom = 604.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("character-blackman-chat")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DialogueText" type="Label" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 227.0
+offset_top = 36.0
+offset_right = -162.0
+offset_bottom = -63.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "对话文本"
+autowrap_mode = 3
+
+[node name="StartButton" type="TextureButton" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -99.5
+offset_top = -78.0
+offset_right = 100.5
+offset_bottom = 22.0
+grow_horizontal = 2
+grow_vertical = 0
+texture_normal = ExtResource("gamestart_texture")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="SpeakerName" type="Label" parent="DialogueUI/DialogueBox"]
+layout_mode = 1
+offset_left = 157.0
+offset_top = 4.0
+offset_right = 357.0
+offset_bottom = 38.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "阿明"
+
+[node name="GameBackground" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameElements" type="Control" parent="GameBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="GameBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("game_background")
+
+[node name="Player" type="TextureRect" parent="GameBackground"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -101.0
+offset_top = -215.0
+offset_right = 50.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("player_texture")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="UI" type="Control" parent="GameBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WeightInfo" type="Control" parent="GameBackground/UI"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 420.0
+offset_bottom = 250.0
+
+[node name="TimeLabel" type="Label" parent="GameBackground/UI/WeightInfo"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 200.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+text = "时间: 90"
+horizontal_alignment = 1
+
+[node name="StoneProgress" type="ProgressBar" parent="GameBackground/UI/WeightInfo"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 80.0
+offset_right = 320.0
+offset_bottom = 110.0
+theme_override_styles/background = SubResource("StyleBoxFlat_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_stone")
+show_percentage = false
+
+[node name="StoneLabel" type="Label" parent="GameBackground/UI/WeightInfo"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 115.0
+offset_right = 320.0
+offset_bottom = 145.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "重力: 0.0 / 100.0"
+horizontal_alignment = 1
+
+[node name="FloatProgress" type="ProgressBar" parent="GameBackground/UI/WeightInfo"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 160.0
+offset_right = 320.0
+offset_bottom = 190.0
+theme_override_styles/background = SubResource("StyleBoxFlat_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_float")
+show_percentage = false
+
+[node name="FloatLabel" type="Label" parent="GameBackground/UI/WeightInfo"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 195.0
+offset_right = 320.0
+offset_bottom = 225.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "浮力: 0.0 / 100.0"
+horizontal_alignment = 1
+
+[node name="FallingItems" type="Control" parent="GameBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Result" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="Result"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5)
+
+[node name="ResultTexture" type="TextureRect" parent="Result"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5

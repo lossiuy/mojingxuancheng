@@ -187,7 +187,7 @@ func _on_cancel_pressed():
 	
 	# 重新生成人物
 	setup_people()
-	$"UI#ResultLabel".hide()
+	$"UI#ResultTexture".hide()
 	$"UI#NextButton".hide()
 	$"UI#ConfirmButton".disabled = false
 
@@ -345,46 +345,13 @@ func spawn_stone(weight):
 	current_stone_count += 1
 
 func show_success(moment):
-	if current_level == 3:
-		# 显示结局对话
-		is_showing_ending = true
-		ending_dialogue_index = 0
-		
-		# 隐藏游戏UI
-		$GameBackground/GameElements.hide()
-		$"UI#StoneButtons".hide()
-		$"UI#ConfirmButton".hide()
-		$"UI#CancelButton".hide()
-		$"UI_WeightInfo#CurrentWeight".hide()
-		$"UI_WeightInfo#TargetWeight".hide()
-		$"UI#LevelLabel".hide()
-		$"UI#TorqueLabel".hide()
-		$"UI#ResultLabel".hide()
-		
-		# 显示结局对话UI
-		$DialogueUI.show()
-		update_dialogue_display(0)  # 使用统一的显示函数
-		update_portrait_modulate(0)
-		
-		# 连接结局对话的输入事件
-		if not $DialogueUI/DialogueBox.gui_input.is_connected(_on_ending_dialogue_input):
-			$DialogueUI/DialogueBox.gui_input.connect(_on_ending_dialogue_input)
-			if not $DialogueUI/NarrationText.gui_input.is_connected(_on_ending_dialogue_input):
-				$DialogueUI/NarrationText.gui_input.connect(_on_ending_dialogue_input)
-	else:
-		# 修改成功提示信息
-		var message = "左边力矩 = 右边力矩\n拯救成功！请进入下一关拯救其他难民！"
-		$"UI#ResultLabel".text = message
-		$"UI#ResultLabel".modulate = Color(0, 1, 0)
-		$"UI#ResultLabel".show()
-		
-		# 显示下一关按钮
-		$"UI#NextButton".show()
-		$"UI#NextButton".move_to_front()
-		
-		$"UI#ConfirmButton".disabled = true
+	# 显示成功图片
+	$"UI#ResultTexture".texture = load("res://images/success.png")
+	$"UI#ResultTexture".custom_minimum_size = Vector2(150, 75)
+	$"UI#ResultTexture".size = Vector2(150, 75)
+	$"UI#ResultTexture".show()
 	
-	# 旋转杠杆动画
+	# 添加下沉动画
 	can_rotate = true
 	var tween = create_tween()
 	
@@ -397,23 +364,61 @@ func show_success(moment):
 	# 先重置杠杆位置
 	update_fulcrum_position()
 	
-	# 然后旋转
-	tween.tween_property(lever, "rotation", 0.0, 1.0)
-	
-	# 移动石头和人物
+	# 让所有物体下沉一点
 	for child in $GameBackground/GameElements/Lever.get_children():
 		if child is Sprite2D and child != $GameBackground/GameElements/Lever/LeverBar:
 			var original_pos = child.position
-			if "@Sprite2D" in child.name:  # 人物
-				tween.parallel().tween_property(child, "position:y", original_pos.y + 20, 1.0)
-			else:  # 石头
-				tween.parallel().tween_property(child, "position:y", original_pos.y + 20, 1.0)
+			tween.parallel().tween_property(child, "position:y", 
+				original_pos.y + 20, 1.0)
+	
+	# 3秒后自动隐藏成功图片
+	var timer = get_tree().create_timer(3.0)
+	timer.timeout.connect(func(): $"UI#ResultTexture".hide())
+	
+	if current_level == 3:
+		# 等待动画和图片显示完成后显示结局对话
+		timer.timeout.connect(func():
+			# 显示结局对话
+			is_showing_ending = true
+			ending_dialogue_index = 0
+			
+			# 隐藏游戏UI
+			$GameBackground/GameElements.hide()
+			$"UI#StoneButtons".hide()
+			$"UI#ConfirmButton".hide()
+			$"UI#CancelButton".hide()
+			$"UI_WeightInfo#CurrentWeight".hide()
+			$"UI_WeightInfo#TargetWeight".hide()
+			$"UI#LevelLabel".hide()
+			$"UI#TorqueLabel".hide()
+			
+			# 显示结局对话UI
+			$DialogueUI.show()
+			update_dialogue_display(0)
+			update_portrait_modulate(0)
+			
+			# 连接结局对话的输入事件
+			if not $DialogueUI/DialogueBox.gui_input.is_connected(_on_ending_dialogue_input):
+				$DialogueUI/DialogueBox.gui_input.connect(_on_ending_dialogue_input)
+				if not $DialogueUI/NarrationText.gui_input.is_connected(_on_ending_dialogue_input):
+					$DialogueUI/NarrationText.gui_input.connect(_on_ending_dialogue_input))
+	else:
+		# 显示下一关按钮
+		$"UI#NextButton".show()
+		$"UI#NextButton".move_to_front()
+	
+	$"UI#ConfirmButton".disabled = true
 
 func show_failure():
-	var message = "左边力矩 ≠ 右边力矩\n请重新尝试！"
-	$"UI#ResultLabel".text = message
-	$"UI#ResultLabel".modulate = Color(1, 0, 0)
-	$"UI#ResultLabel".show()
+	# 显示失败图片
+	$"UI#ResultTexture".texture = load("res://images/failed.png")
+	$"UI#ResultTexture".custom_minimum_size = Vector2(150, 75)
+	$"UI#ResultTexture".size = Vector2(150, 75)
+	$"UI#ResultTexture".show()
+	
+	# 3秒后自动隐藏失败图片
+	var timer = get_tree().create_timer(3.0)
+	timer.timeout.connect(func(): $"UI#ResultTexture".hide())
 	
 	# 旋转杠杆动画
 	can_rotate = true
@@ -576,28 +581,10 @@ func _on_next_level_pressed():
 			people_count = 3  # 第二关3个难民
 			left_arm = 1
 			right_arm = 2
-			var level_hint = "第二关：右力臂(200)是左力臂(100)的2倍\n需要的石头重量 = 右力臂(%d) × 难民重量(%.1f石) ÷ 左力臂(%d) = %.2f石" % [
-				right_arm * 100,
-				people_count * people_weight,
-				left_arm * 100,
-				people_count * people_weight * 2
-			]
-			$"UI#ResultLabel".text = level_hint
-			$"UI#ResultLabel".modulate = Color(0, 0, 0)
-			$"UI#ResultLabel".show()
 		3:
 			people_count = 1  # 第三关1个难民
 			left_arm = 3
 			right_arm = 1
-			var level_hint = "第三关：左力臂(300)是右力臂(100)的3倍\n需要的石头重量 = 右力臂(%d) × 难民重量(%.1f石) ÷ 左力臂(%d) = %.2f石" % [
-				right_arm * 100,
-				people_count * people_weight,
-				left_arm * 100,
-				float(people_count * people_weight) / 3.0
-			]
-			$"UI#ResultLabel".text = level_hint
-			$"UI#ResultLabel".modulate = Color(0, 0, 0)
-			$"UI#ResultLabel".show()
 		_:
 			# 显示结局对话
 			is_showing_ending = true
@@ -612,7 +599,7 @@ func _on_next_level_pressed():
 			$"UI_WeightInfo#TargetWeight".hide()
 			$"UI#LevelLabel".hide()
 			$"UI#TorqueLabel".hide()
-			$"UI#ResultLabel".hide()
+			$"UI#ResultTexture".hide()
 			$"UI#NextButton".hide()
 			
 			# 显示结局对话UI
