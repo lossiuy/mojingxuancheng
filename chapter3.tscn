@@ -5,10 +5,10 @@
 [ext_resource type="Texture2D" uid="uid://co0vsdtyek3kx" path="res://images/mirror_piece.png" id="3_s34gt"]
 [ext_resource type="Texture2D" uid="uid://dndtrpjgofw1f" path="res://images/fog.png" id="4_5u0xd"]
 [ext_resource type="Texture2D" uid="uid://dsx3ss66t2xyf" path="res://images/mirror-bg.png" id="5_ay6h1"]
-[ext_resource type="Texture2D" uid="uid://djremsmdbk73n" path="res://images/memory1.png" id="5_wb5o7"]
+[ext_resource type="Texture2D" uid="uid://cu14s7gwmdwq3" path="res://images/memory-1.png" id="5_uassw"]
 [ext_resource type="Texture2D" uid="uid://b1506r2qpxivw" path="res://images/mirror2.png" id="6_5yok6"]
-[ext_resource type="Texture2D" uid="uid://g7et7mfpkga8" path="res://images/memory2.png" id="6_me5pm"]
-[ext_resource type="Texture2D" uid="uid://d1o6mumvc4s80" path="res://images/memory3.png" id="7_5tcrd"]
+[ext_resource type="Texture2D" uid="uid://ckp12ek2374ip" path="res://images/memory-2.png" id="6_rabkp"]
+[ext_resource type="Texture2D" uid="uid://cs2t04ljo8lik" path="res://images/memory-3.png" id="7_73gac"]
 [ext_resource type="Texture2D" uid="uid://cjw5x0lnrc8qv" path="res://images/character-ming-chat.png" id="7_b5ki3"]
 [ext_resource type="Texture2D" uid="uid://b8b70wawe5b7o" path="res://images/character-blackman-chat.png" id="8_hs7rl"]
 
@@ -64,87 +64,90 @@ stretch_mode = 6
 
 [node name="FogOverlay1" type="TextureRect" parent="Entrance"]
 layout_mode = 0
-offset_left = 718.0
-offset_top = 290.0
-offset_right = 1230.0
-offset_bottom = 746.0
+offset_left = 590.0
+offset_top = 197.0
+offset_right = 1556.0
+offset_bottom = 737.0
 rotation = 0.0726162
-scale = Vector2(0.934699, 0.5748)
+scale = Vector2(0.623708, 0.580139)
 texture = ExtResource("4_5u0xd")
 
 [node name="Fragment1" type="TextureButton" parent="Entrance"]
 layout_mode = 0
-offset_left = 996.0
-offset_top = 498.0
-offset_right = 1124.0
-offset_bottom = 626.0
-scale = Vector2(0.791763, 0.615385)
+offset_left = 924.0
+offset_top = 433.0
+offset_right = 1890.0
+offset_bottom = 973.0
+scale = Vector2(0.172496, 0.232601)
 texture_normal = ExtResource("3_s34gt")
 
 [node name="FogOverlay2" type="TextureRect" parent="Entrance"]
 layout_mode = 0
-offset_left = 300.0
-offset_top = 159.0
-offset_right = 812.0
-offset_bottom = 615.0
+offset_left = 179.0
+offset_top = 44.0
+offset_right = 1145.0
+offset_bottom = 584.0
 rotation = 0.0726162
-scale = Vector2(0.934699, 0.5748)
+scale = Vector2(0.622913, 0.615527)
 texture = ExtResource("4_5u0xd")
 
 [node name="Fragment2" type="TextureButton" parent="Entrance"]
 layout_mode = 0
-offset_left = 622.0
-offset_top = 335.0
-offset_right = 750.0
-offset_bottom = 463.0
-scale = Vector2(0.774194, 0.638461)
+offset_left = 490.0
+offset_top = 298.0
+offset_right = 1456.0
+offset_bottom = 838.0
+scale = Vector2(0.176894, 0.208601)
 texture_normal = ExtResource("3_s34gt")
 
 [node name="FogOverlay3" type="TextureRect" parent="Entrance"]
 layout_mode = 0
-offset_left = -21.0
-offset_top = -24.0
-offset_right = 491.0
-offset_bottom = 432.0
+offset_left = -187.0
+offset_top = -35.0
+offset_right = 779.0
+offset_bottom = 505.0
 rotation = 0.0726162
-scale = Vector2(0.934699, 0.5748)
+scale = Vector2(0.562727, 0.600658)
 texture = ExtResource("4_5u0xd")
 
 [node name="Fragment3" type="TextureButton" parent="Entrance"]
 layout_mode = 0
-offset_left = 172.0
-offset_top = 175.0
-offset_right = 300.0
-offset_bottom = 303.0
-scale = Vector2(0.788889, 0.666667)
+offset_left = 81.0
+offset_top = 143.0
+offset_right = 1047.0
+offset_bottom = 683.0
+scale = Vector2(0.181687, 0.203781)
 texture_normal = ExtResource("3_s34gt")
 
 [node name="Memory1" type="TextureRect" parent="Entrance"]
+visible = false
 layout_mode = 0
-offset_left = 227.0
-offset_top = 21.0
-offset_right = 1251.0
-offset_bottom = 1045.0
-scale = Vector2(0.584823, 0.506466)
-texture = ExtResource("5_wb5o7")
+offset_left = 222.0
+offset_top = 25.0
+offset_right = 1246.0
+offset_bottom = 1049.0
+scale = Vector2(0.700568, 0.464746)
+texture = ExtResource("5_uassw")
 
 [node name="Memory2" type="TextureRect" parent="Entrance"]
+visible = false
 layout_mode = 0
-offset_left = 224.0
-offset_top = 19.0
-offset_right = 1248.0
-offset_bottom = 1043.0
-scale = Vector2(0.584823, 0.506466)
-texture = ExtResource("6_me5pm")
+offset_left = 204.0
+offset_top = 21.0
+offset_right = 1228.0
+offset_bottom = 1045.0
+scale = Vector2(0.731645, 0.493189)
+texture = ExtResource("6_rabkp")
 
 [node name="Memory3" type="TextureRect" parent="Entrance"]
+visible = false
 layout_mode = 0
-offset_left = 227.0
-offset_top = 17.0
-offset_right = 1251.0
-offset_bottom = 1041.0
-scale = Vector2(0.584823, 0.506466)
-texture = ExtResource("7_5tcrd")
+offset_left = 170.0
+offset_top = 11.0
+offset_right = 1194.0
+offset_bottom = 1035.0
+scale = Vector2(0.803377, 0.510465)
+texture = ExtResource("7_73gac")
 
 [node name="MirrorHall" type="Control" parent="."]
 visible = false

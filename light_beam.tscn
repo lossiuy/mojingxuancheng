@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctr1nxj135p6y"]
+
+[ext_resource type="Script" path="res://scripts/light_beam.gd" id="1_script"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_6nyma"]
+b = Vector2(775, -1)
+
+[node name="LightBeam" type="Area2D"]
+position = Vector2(0, -1)
+collision_layer = 2
+collision_mask = 16
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("SegmentShape2D_6nyma")
+
+[node name="GlowLine" type="Line2D" parent="."]
+z_index = -1
+position = Vector2(2, -1)
+points = PackedVector2Array(-1, 0, 777, 0)
+width = 6.0
+default_color = Color(0.643137, 0.709804, 0.180392, 0.909804)
+
+[node name="Line2D" type="Line2D" parent="."]
+position = Vector2(1, 3)
+scale = Vector2(1.01554, 1.33333)
+points = PackedVector2Array(0, -3, 774, -4, 774, -4)
+width = 6.0
+default_color = Color(0.839216, 0.843137, 0.254902, 0.956863)
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+visible = false
+position = Vector2(0, -1)
+amount = 100
+lifetime = 0.5
+preprocess = 1.0
+emission_shape = 1
+emission_sphere_radius = 1.0
+spread = 15.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 20.0
+initial_velocity_max = 40.0
+scale_amount_max = 3.0
+color = Color(1, 0.98, 0.9, 0.6)
