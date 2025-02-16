@@ -255,10 +255,10 @@ func _on_dialogue_input(event):
 				# 结局对话结束后返回目录
 				get_tree().change_scene_to_file("res://content.tscn")
 		else:
-		if dialogue_index < dialogues.size() - 1:
-			dialogue_index += 1
-			update_dialogue_display(dialogue_index)
-			update_portrait_modulate(dialogue_index)
+			if dialogue_index < dialogues.size() - 1:
+				dialogue_index += 1
+				update_dialogue_display(dialogue_index)
+				update_portrait_modulate(dialogue_index)
 
 func _on_start_game():
 	# 隐藏背景和对话界面
@@ -268,7 +268,7 @@ func _on_start_game():
 	# 显示游戏界面
 	$GameBackground.show()
 	$GameBackground.modulate = Color(1, 1, 1, 1)  # 确保游戏背景完全不透明
-
+	
 	# 显示游戏UI
 	$GameBackground/FallingItems.show()
 	$GameBackground/Player.show()
@@ -433,7 +433,7 @@ func show_ending():
 	if not result_ui:
 		push_error("Result node not found!")
 		return
-		
+	
 	result_ui.show()  # 显示结果界面
 	
 	# 设置结果图片
@@ -520,18 +520,18 @@ func show_ending():
 	$Background.modulate = Color(0.3, 0.3, 0.3, 1)  # 调暗背景
 	$GameBackground.hide()  # 隐藏游戏界面
 	$DialogueUI.show()
-			is_showing_ending = true
-			ending_dialogue_index = 0
-			update_dialogue_display(0)
+	is_showing_ending = true
+	ending_dialogue_index = 0
+	update_dialogue_display(0)
 	update_portrait_modulate(0)
 
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
-	if is_showing_ending:
-		ending_dialogue_index += 1
-		if ending_dialogue_index < ending_dialogues.size():
-			update_dialogue_display(ending_dialogue_index)
+		if is_showing_ending:
+			ending_dialogue_index += 1
+			if ending_dialogue_index < ending_dialogues.size():
+				update_dialogue_display(ending_dialogue_index)
 				update_portrait_modulate(ending_dialogue_index)
-		else:
+			else:
 				# 结局对话结束后返回目录
-			get_tree().change_scene_to_file("res://content.tscn")
+				get_tree().change_scene_to_file("res://content.tscn")
