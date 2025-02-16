@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dswtj3x6axmb"]
+[gd_scene load_steps=9 format=3 uid="uid://dswtj3x6axmb"]
 
-[ext_resource type="Script" path="res://scripts/chapter_3_1.gd" id="1_jjhrh"]
+[ext_resource type="Script" path="res://scripts/chapter_3_1.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://dsx3ss66t2xyf" path="res://images/mirror-bg.png" id="2_ba48f"]
-[ext_resource type="Texture2D" uid="uid://b1506r2qpxivw" path="res://images/mirror2.png" id="3_1ikbr"]
-[ext_resource type="Texture2D" uid="uid://cpdqucjhjqspc" path="res://images/game-bg.png" id="4_me02h"]
+[ext_resource type="Texture2D" uid="uid://cpdqucjhjqspc" path="res://images/game-bg.png" id="3_4qyia"]
+[ext_resource type="Script" path="res://scripts/light_source.gd" id="3_light_source"]
+[ext_resource type="Script" path="res://scripts/light_system.gd" id="4_light_system"]
 [ext_resource type="Texture2D" uid="uid://cjw5x0lnrc8qv" path="res://images/character-ming-chat.png" id="5_2v7a4"]
 [ext_resource type="Texture2D" uid="uid://b8b70wawe5b7o" path="res://images/character-blackman-chat.png" id="6_x67h0"]
 
@@ -21,7 +22,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_jjhrh")
+mouse_filter = 2
+script = ExtResource("1_script")
 
 [node name="HallBG" type="TextureRect" parent="."]
 layout_mode = 0
@@ -32,15 +34,6 @@ scale = Vector2(0.871546, 0.865711)
 texture = ExtResource("2_ba48f")
 stretch_mode = 6
 
-[node name="RotatableMirror" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 507.0
-offset_top = 335.0
-offset_right = 830.0
-offset_bottom = 375.0
-scale = Vector2(0.523365, 0.904762)
-texture_normal = ExtResource("3_1ikbr")
-
 [node name="GameBackground" type="TextureRect" parent="."]
 visible = false
 layout_mode = 1
@@ -49,11 +42,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("4_me02h")
+texture = ExtResource("3_4qyia")
 stretch_mode = 6
-
-[node name="GameElements" type="Node2D" parent="GameBackground"]
-position = Vector2(0, 100)
 
 [node name="DialogueUI" type="Control" parent="."]
 layout_mode = 1
@@ -62,6 +52,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="DialogueUI"]
 layout_mode = 1
@@ -73,6 +64,7 @@ offset_right = 25.0
 offset_bottom = 5.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0, 0, 0, 0.5)
 
 [node name="NarrationText" type="Label" parent="DialogueUI"]
@@ -104,6 +96,7 @@ offset_left = 25.0
 offset_top = -198.0
 grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cgl3e")
 
 [node name="DialogueText" type="Label" parent="DialogueUI/DialogueBox"]
@@ -191,3 +184,14 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 24
 text = "返回"
 flat = true
+
+[node name="LightSource" type="Node2D" parent="."]
+position = Vector2(120, 346)
+script = ExtResource("3_light_source")
+
+[node name="LightSystem" type="Node2D" parent="."]
+script = ExtResource("4_light_system")
+
+[node name="Mirrors" type="Node2D" parent="."]
+
+[node name="Targets" type="Node2D" parent="."]

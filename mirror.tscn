@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://creleqocrop1h"]
+
+[ext_resource type="Script" path="res://scripts/mirror.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://b1506r2qpxivw" path="res://images/mirror2.png" id="2_mirror2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(167, 25)
+
+[node name="Mirror" type="Area2D" groups=["mirrors"]]
+process_mode = 3
+position = Vector2(601, 280)
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mirror2")
